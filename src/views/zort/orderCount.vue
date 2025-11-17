@@ -60,6 +60,18 @@
         <img src="/amaze.png" width="30" class="mr-2" />
         <span class="text-md font-normal text-gray-500">{{ amaze }} รายการ</span>
       </div>
+
+       <!-- Tiktok -->
+       <div v-if="isLoading" class="flex items-center bg-white rounded-lg p-2 shadow-md">
+        <img src="/tiktok.png" width="30" class="mr-2 opacity-50" />
+        <div class="flex items-center">
+          <div class="w-6 h-6 border-2 border-yellow-500 border-t-transparent rounded-full animate-spin mr-2"></div>
+        </div>
+      </div>
+      <div v-else class="flex items-center bg-white rounded-lg p-2 shadow-md">
+        <img src="/tiktok.png" width="30" class="mr-2" />
+        <span class="text-md font-normal text-gray-500">{{ tiktok }} รายการ</span>
+      </div>
     </div>
   </div>
 </template>
@@ -96,11 +108,16 @@ export default {
       return props.data.filter((item) => item.saleschannel === "Amaze").length;
     });
 
+    const tiktok = computed(() => {
+      return props.data.filter((item) => item.saleschannel === "TIKTOK").length;
+    });
+
     return {
       shopee,
       lazada,
       makro,
       amaze,
+      tiktok,
       total
     };
   },

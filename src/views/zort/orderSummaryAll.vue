@@ -21,7 +21,7 @@
 
                     <tr v-for="item in pageItems" :key="item.id">
                         <td>{{ item.id }}</td>
-                        <td>{{ item.name }}</td>
+                        <td class="wrap-text">{{ item.name }}</td>
                         <td>{{ item.convertedUnits.large.qty }}</td>
                         <td>{{ item.convertedUnits.medium.qty }}</td>
                         <td>{{ item.convertedUnits.small.qty }}</td>
@@ -161,6 +161,11 @@ const printPage = () => {
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.wrap-text {
+  white-space: normal;
+  word-wrap: break-word;
 }
 
 .a4-page {

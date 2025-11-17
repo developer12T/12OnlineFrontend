@@ -1,13 +1,15 @@
 // components/OrderHistory.vue
 <template>
-    <div :class="[
-    'p-4 transition-all duration-100 ease-in-out',
-    isCollapsed ? 'ml-20' : 'ml-64'
-  ]">
+  <div
+    :class="[
+      'p-4 transition-all duration-100 ease-in-out',
+      isCollapsed ? 'ml-20' : 'ml-64',
+    ]"
+  >
     <div class="p-4">
       <div class="flex flex-col-reverse sm:flex-row justify-end items-center mb-4">
         <div class="mr-auto flex items-center space-x-3 ml-2">
-          <div class="relative"> 
+          <div class="relative">
             <button
               id="dropdownYearButton"
               data-dropdown-toggle="dropdownYear"
@@ -17,8 +19,18 @@
               :class="{ 'ring-2 ring-blue-300 shadow-2xl scale-105': isYearDropdownOpen }"
             >
               <div class="flex items-center">
-                <svg class="w-3.5 h-3.5 mr-1.5 group-hover:rotate-12 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                <svg
+                  class="w-3.5 h-3.5 mr-1.5 group-hover:rotate-12 transition-transform duration-300"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                  ></path>
                 </svg>
                 <span class="font-medium text-sm">{{ selectedYear }}</span>
                 <svg
@@ -42,31 +54,54 @@
             <div
               id="dropdownYear"
               class="absolute top-full left-0 mt-1.5 z-50 bg-white/95 backdrop-blur-sm divide-y divide-gray-100 rounded-xl shadow-2xl w-24 dark:bg-gray-800/95 border border-gray-200/50 dark:border-gray-600/50 transition-all duration-300 ease-out"
-              :class="{ 
+              :class="{
                 'opacity-100 visible transform translate-y-0 scale-100': isYearDropdownOpen,
-                'opacity-0 invisible transform -translate-y-4 scale-95': !isYearDropdownOpen
+                'opacity-0 invisible transform -translate-y-4 scale-95': !isYearDropdownOpen,
               }"
             >
               <div class="px-2 py-1.5 border-b border-gray-100 dark:border-gray-600">
-                <h3 class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">เลือกปี</h3>
+                <h3
+                  class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide"
+                >
+                  เลือกปี
+                </h3>
               </div>
               <ul
                 class="py-2 text-sm text-gray-700 dark:text-gray-200 max-h-40 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100"
                 aria-labelledby="dropdownYearButton"
               >
-                <li v-for="year in years" :key="year" @click="selectYear(year)" class="px-1.5">
+                <li
+                  v-for="year in years"
+                  :key="year"
+                  @click="selectYear(year)"
+                  class="px-1.5"
+                >
                   <a
                     href="#"
                     class="block px-3 py-2 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-300 focus:bg-blue-50 font-medium group/item"
-                    :class="{ 'bg-gradient-to-r from-blue-100 to-blue-200 text-blue-700 dark:from-blue-600 dark:to-blue-700 dark:text-white shadow-md': selectedYear === year }"
+                    :class="{
+                      'bg-gradient-to-r from-blue-100 to-blue-200 text-blue-700 dark:from-blue-600 dark:to-blue-700 dark:text-white shadow-md':
+                        selectedYear === year,
+                    }"
                     @keydown.enter="selectYear(year)"
                     @keydown.space="selectYear(year)"
                     tabindex="0"
                   >
                     <div class="flex items-center justify-between">
                       <span class="text-sm">{{ year }}</span>
-                      <svg v-if="selectedYear === year" class="w-3.5 h-3.5 text-blue-600 dark:text-blue-400 opacity-0 group-hover/item:opacity-100 transition-opacity duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                      <svg
+                        v-if="selectedYear === year"
+                        class="w-3.5 h-3.5 text-blue-600 dark:text-blue-400 opacity-0 group-hover/item:opacity-100 transition-opacity duration-200"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M5 13l4 4L19 7"
+                        ></path>
                       </svg>
                     </div>
                   </a>
@@ -83,11 +118,23 @@
               class="text-white bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 focus:ring-4 focus:outline-none focus:ring-indigo-300 font-medium rounded-lg text-sm px-4 py-2 text-center inline-flex items-center transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 group"
               type="button"
               @click="toggleDropdown('dropdownMonth')"
-              :class="{ 'ring-2 ring-indigo-300 shadow-2xl scale-105': isMonthDropdownOpen }"
+              :class="{
+                'ring-2 ring-indigo-300 shadow-2xl scale-105': isMonthDropdownOpen,
+              }"
             >
               <div class="flex items-center">
-                <svg class="w-3.5 h-3.5 mr-1.5 group-hover:rotate-12 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                <svg
+                  class="w-3.5 h-3.5 mr-1.5 group-hover:rotate-12 transition-transform duration-300"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 14l-7 7m0 0l-7-7m7 7V3"
+                  ></path>
                 </svg>
                 <span class="font-medium text-sm">{{ selectedMonthText }}</span>
                 <svg
@@ -111,31 +158,54 @@
             <div
               id="dropdownMonth"
               class="absolute top-full left-0 mt-1.5 z-50 bg-white/95 backdrop-blur-sm divide-y divide-gray-100 rounded-xl shadow-2xl w-32 dark:bg-gray-800/95 border border-gray-200/50 dark:border-gray-600/50 transition-all duration-300 ease-out"
-              :class="{ 
+              :class="{
                 'opacity-100 visible transform translate-y-0 scale-100': isMonthDropdownOpen,
-                'opacity-0 invisible transform -translate-y-4 scale-95': !isMonthDropdownOpen
+                'opacity-0 invisible transform -translate-y-4 scale-95': !isMonthDropdownOpen,
               }"
             >
               <div class="px-2 py-1.5 border-b border-gray-100 dark:border-gray-600">
-                <h3 class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">เลือกเดือน</h3>
+                <h3
+                  class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide"
+                >
+                  เลือกเดือน
+                </h3>
               </div>
               <ul
                 class="py-2 text-sm text-gray-700 dark:text-gray-200 max-h-40 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100"
                 aria-labelledby="dropdownMonthButton"
               >
-                <li v-for="month in months" :key="month.num" @click="selectMonth(month)" class="px-1.5">
+                <li
+                  v-for="month in months"
+                  :key="month.num"
+                  @click="selectMonth(month)"
+                  class="px-1.5"
+                >
                   <a
                     href="#"
                     class="block px-3 py-2 rounded-lg hover:bg-gradient-to-r hover:from-indigo-50 hover:to-indigo-100 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:bg-indigo-50 font-medium group/item"
-                    :class="{ 'bg-gradient-to-r from-indigo-100 to-indigo-200 text-indigo-700 dark:from-indigo-600 dark:to-indigo-700 dark:text-white shadow-md': selectedMonth === month.num }"
+                    :class="{
+                      'bg-gradient-to-r from-indigo-100 to-indigo-200 text-indigo-700 dark:from-indigo-600 dark:to-indigo-700 dark:text-white shadow-md':
+                        selectedMonth === month.num,
+                    }"
                     @keydown.enter="selectMonth(month)"
                     @keydown.space="selectMonth(month)"
                     tabindex="0"
                   >
                     <div class="flex items-center justify-between">
                       <span class="text-sm">{{ month.text }}</span>
-                      <svg v-if="selectedMonth === month.num" class="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400 opacity-0 group-hover/item:opacity-100 transition-opacity duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                      <svg
+                        v-if="selectedMonth === month.num"
+                        class="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400 opacity-0 group-hover/item:opacity-100 transition-opacity duration-200"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M5 13l4 4L19 7"
+                        ></path>
                       </svg>
                     </div>
                   </a>
@@ -160,7 +230,7 @@
           สลิปเก่า
           {{ selected.length > 0 ? selected.length + " ใบ" : "" }}
         </a>
-        <a
+        <!-- <a
           @click="printReceipt()"
           :href="
             'http://58.181.206.156:8080/12Trading/zort_pdf/printReceiptCopyERP.php?checklist=' +
@@ -169,16 +239,26 @@
           target="_blank"
           class="bg-green-500 hover:bg-green-600 text-white shadow-lg border border-green-500 hover:border-green-600 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-md text-sm px-5 py-2 text-center mb-2 sm:mb-0 dark:bg-green-600 dark:text-green-500 dark:hover:text-white dark:hover:bg-green-700 dark:focus:ring-green-800 sm:ml-4"
           :class="{ 'pointer-events-none': !isItemSelected }"
+        > -->
+        <a
+          @click.prevent="printReceipt"
+          target="_blank"
+          class="bg-green-500 hover:bg-green-600 text-white shadow-lg border border-green-500 hover:border-green-600 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-md text-sm px-5 py-2 text-center mb-2 sm:mb-0 dark:bg-green-600 dark:text-green-500 dark:hover:text-white dark:hover:bg-green-700 dark:focus:ring-green-800 sm:ml-4"
+          :class="{ 'pointer-events-none opacity-50': !isItemSelected }"
         >
-          พิมพ์สำเนา
+          พิมพ์สำเนา test
           {{ selected.length > 0 ? selected.length + " ใบ" : "" }}
         </a>
       </div>
       <div
-        class="relative flex justify-center m-2 mt-0 md:h-[470px] lg:h-[650px] overflow-y-scroll shadow-md sm:rounded-lg" style="height: calc(100vh - 165px);"
+        class="relative flex justify-center m-2 mt-0 md:h-[470px] lg:h-[650px] overflow-y-scroll shadow-md sm:rounded-lg"
+        style="height: calc(100vh - 165px)"
       >
         <!-- Loading Overlay -->
-        <div v-if="isLoading" class="absolute inset-0 bg-white flex items-center justify-center z-50">
+        <div
+          v-if="isLoading"
+          class="absolute inset-0 bg-white flex items-center justify-center z-50"
+        >
           <div class="flex flex-col items-center space-y-6">
             <!-- Running Car Animation -->
             <div class="relative w-64 h-16 overflow-hidden">
@@ -190,20 +270,36 @@
                   <!-- Car Body -->
                   <div class="w-16 h-8 bg-[#0369A1] rounded-lg relative">
                     <!-- Car Windows -->
-                    <div class="absolute top-1 left-2 w-3 h-2 bg-blue-200 rounded-sm"></div>
-                    <div class="absolute top-1 right-2 w-3 h-2 bg-blue-200 rounded-sm"></div>
+                    <div
+                      class="absolute top-1 left-2 w-3 h-2 bg-blue-200 rounded-sm"
+                    ></div>
+                    <div
+                      class="absolute top-1 right-2 w-3 h-2 bg-blue-200 rounded-sm"
+                    ></div>
                     <!-- Car Lights -->
-                    <div class="absolute top-1 left-1 w-1 h-1 bg-yellow-300 rounded-full"></div>
-                    <div class="absolute top-1 right-1 w-1 h-1 bg-yellow-300 rounded-full"></div>
+                    <div
+                      class="absolute top-1 left-1 w-1 h-1 bg-yellow-300 rounded-full"
+                    ></div>
+                    <div
+                      class="absolute top-1 right-1 w-1 h-1 bg-yellow-300 rounded-full"
+                    ></div>
                   </div>
                   <!-- Car Wheels -->
-                  <div class="absolute -bottom-1 left-1 w-3 h-3 bg-gray-800 rounded-full border-2 border-gray-600"></div>
-                  <div class="absolute -bottom-1 right-1 w-3 h-3 bg-gray-800 rounded-full border-2 border-gray-600"></div>
+                  <div
+                    class="absolute -bottom-1 left-1 w-3 h-3 bg-gray-800 rounded-full border-2 border-gray-600"
+                  ></div>
+                  <div
+                    class="absolute -bottom-1 right-1 w-3 h-3 bg-gray-800 rounded-full border-2 border-gray-600"
+                  ></div>
                   <!-- Wheel Spokes -->
-                  <div class="absolute -bottom-1 left-1 w-3 h-3 flex items-center justify-center">
+                  <div
+                    class="absolute -bottom-1 left-1 w-3 h-3 flex items-center justify-center"
+                  >
                     <div class="w-1 h-1 bg-gray-400 rounded-full"></div>
                   </div>
-                  <div class="absolute -bottom-1 right-1 w-3 h-3 flex items-center justify-center">
+                  <div
+                    class="absolute -bottom-1 right-1 w-3 h-3 flex items-center justify-center"
+                  >
                     <div class="w-1 h-1 bg-gray-400 rounded-full"></div>
                   </div>
                 </div>
@@ -218,14 +314,23 @@
             <!-- Pulse Dots -->
             <div class="flex space-x-1">
               <div class="w-2 h-2 bg-[#0369A1] rounded-full animate-pulse"></div>
-              <div class="w-2 h-2 bg-[#0369A1] rounded-full animate-pulse" style="animation-delay: 0.2s;"></div>
-              <div class="w-2 h-2 bg-[#0369A1] rounded-full animate-pulse" style="animation-delay: 0.4s;"></div>
+              <div
+                class="w-2 h-2 bg-[#0369A1] rounded-full animate-pulse"
+                style="animation-delay: 0.2s"
+              ></div>
+              <div
+                class="w-2 h-2 bg-[#0369A1] rounded-full animate-pulse"
+                style="animation-delay: 0.4s"
+              ></div>
             </div>
           </div>
         </div>
 
         <!-- Data Table -->
-        <table v-if="!isLoading && filteredItems.length > 0" class="w-full bg-white text-sm text-left text-gray-500 dark:text-gray-400">
+        <table
+          v-if="!isLoading && filteredItems.length > 0"
+          class="w-full bg-white text-sm text-left text-gray-500 dark:text-gray-400"
+        >
           <TableOrder
             :columns="tableColumns"
             :data="filteredItems"
@@ -332,6 +437,18 @@
                   width="25"
                   class="mr-1"
                 />
+                <img
+                  v-else-if="row.saleschannel === 'TIKTOK'"
+                  src="/tiktok.png"
+                  width="25"
+                  class="mr-1"
+                />
+                <img
+                  v-if="row.saleschannel === 'Amaze'"
+                  src="/amaze.png"
+                  width="15"
+                  class="mr-1"
+                />
                 <span :title="row.saleschannel"></span>
               </div>
             </template>
@@ -355,6 +472,18 @@
                   width="25"
                   class="mr-1"
                 />
+                <img
+                  v-else-if="row.saleschannel === 'TIKTOK'"
+                  src="/tiktok.png"
+                  width="25"
+                  class="mr-1"
+                />
+                <img
+                  v-if="row.saleschannel === 'Amaze'"
+                  src="/amaze.png"
+                  width="15"
+                  class="mr-1"
+                />
                 <span :title="row.download"></span>
               </div>
             </template>
@@ -362,24 +491,51 @@
         </table>
 
         <!-- Empty State -->
-        <div v-else-if="!isLoading && filteredItems.length === 0" class="flex flex-col justify-center items-center h-full w-full">
+        <div
+          v-else-if="!isLoading && filteredItems.length === 0"
+          class="flex flex-col justify-center items-center h-full w-full"
+        >
           <div class="text-center">
             <!-- Empty State Icon -->
             <div class="mb-4">
-              <svg class="mx-auto h-16 w-16 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              <svg
+                class="mx-auto h-16 w-16 text-gray-300"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="1"
+                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                />
               </svg>
             </div>
             <!-- Empty State Text -->
-            <h3 class="text-lg font-medium text-gray-900 mb-2">ไม่มีข้อมูลประวัติการสั่งซื้อ</h3>
-            <p class="text-gray-500 text-sm mb-4">ไม่พบรายการในเดือน {{ selectedMonthText }} ปี {{ selectedYear }}</p>
+            <h3 class="text-lg font-medium text-gray-900 mb-2">
+              ไม่มีข้อมูลประวัติการสั่งซื้อ
+            </h3>
+            <p class="text-gray-500 text-sm mb-4">
+              ไม่พบรายการในเดือน {{ selectedMonthText }} ปี {{ selectedYear }}
+            </p>
             <!-- Action Button -->
-            <button 
+            <button
               @click="handleYearMonthChange"
               class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >
-              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              <svg
+                class="w-4 h-4 mr-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                />
               </svg>
               รีเฟรชข้อมูล
             </button>
@@ -461,7 +617,7 @@ export default {
     const selectedMonthText = ref("");
     const isYearDropdownOpen = ref(false);
     const isMonthDropdownOpen = ref(false);
-    
+
     // สร้างปีจากปีปัจจุบันย้อนหลัง 5 ปี
     const years = computed(() => {
       const currentYear = new Date().getFullYear();
@@ -471,7 +627,7 @@ export default {
       }
       return yearList;
     });
-    
+
     // สร้างเดือนทั้ง 12 เดือน
     const months = computed(() => [
       { num: "01", text: "มกราคม" },
@@ -485,7 +641,7 @@ export default {
       { num: "09", text: "กันยายน" },
       { num: "10", text: "ตุลาคม" },
       { num: "11", text: "พฤศจิกายน" },
-      { num: "12", text: "ธันวาคม" }
+      { num: "12", text: "ธันวาคม" },
     ]);
 
     const isLoading = ref(true);
@@ -511,7 +667,7 @@ export default {
           textInput.value
         );
       } catch (error) {
-        console.error('Error loading data:', error);
+        console.error("Error loading data:", error);
       } finally {
         isLoading.value = false;
       }
@@ -529,25 +685,29 @@ export default {
     };
 
     const toggleDropdown = (dropdownId) => {
-      if (dropdownId === 'dropdownYear') {
+      if (dropdownId === "dropdownYear") {
         isYearDropdownOpen.value = !isYearDropdownOpen.value;
         isMonthDropdownOpen.value = false; // Close other dropdown
         // Focus management
         if (isYearDropdownOpen.value) {
           nextTick(() => {
-            const firstYearItem = document.querySelector('#dropdownYear li:first-child a');
+            const firstYearItem = document.querySelector(
+              "#dropdownYear li:first-child a"
+            );
             if (firstYearItem) {
               firstYearItem.focus();
             }
           });
         }
-      } else if (dropdownId === 'dropdownMonth') {
+      } else if (dropdownId === "dropdownMonth") {
         isMonthDropdownOpen.value = !isMonthDropdownOpen.value;
         isYearDropdownOpen.value = false; // Close other dropdown
         // Focus management
         if (isMonthDropdownOpen.value) {
           nextTick(() => {
-            const firstMonthItem = document.querySelector('#dropdownMonth li:first-child a');
+            const firstMonthItem = document.querySelector(
+              "#dropdownMonth li:first-child a"
+            );
             if (firstMonthItem) {
               firstMonthItem.focus();
             }
@@ -557,9 +717,9 @@ export default {
     };
 
     const closeDropdown = (dropdownId) => {
-      if (dropdownId === 'dropdownYear') {
+      if (dropdownId === "dropdownYear") {
         isYearDropdownOpen.value = false;
-      } else if (dropdownId === 'dropdownMonth') {
+      } else if (dropdownId === "dropdownMonth") {
         isMonthDropdownOpen.value = false;
       }
     };
@@ -580,7 +740,7 @@ export default {
             textInput.value
           );
         } catch (error) {
-          console.error('Error loading previous page:', error);
+          console.error("Error loading previous page:", error);
         } finally {
           isLoading.value = false;
         }
@@ -598,7 +758,7 @@ export default {
             textInput.value
           );
         } catch (error) {
-          console.error('Error loading next page:', error);
+          console.error("Error loading next page:", error);
         } finally {
           isLoading.value = false;
         }
@@ -615,7 +775,7 @@ export default {
           textInput.value
         );
       } catch (error) {
-        console.error('Error loading page:', error);
+        console.error("Error loading page:", error);
       } finally {
         isLoading.value = false;
       }
@@ -679,7 +839,26 @@ export default {
           showConfirmButton: false,
           allowOutsideClick: false,
         });
+        const idString = Array.isArray(selected.value)
+          ? selected.value.join(",")
+          : selected.value;
+
         // await store.zortOrderHis();
+        // ✅ สร้าง form ชั่วคราว
+        const form = document.createElement("form");
+        form.method = "POST";
+        form.action =
+          "http://58.181.206.156:8080/12Trading/zort_pdf/printReceiptCopyERP.php";
+        form.target = "_blank"; // เปิดแท็บใหม่
+
+        const textarea = document.createElement("textarea");
+        textarea.name = "checklist";
+        textarea.value = idString;
+        form.appendChild(textarea);
+
+        document.body.appendChild(form);
+        form.submit();
+        document.body.removeChild(form);
         Swal.fire({
           icon: "success",
           title: "สำเร็จ!",
@@ -722,42 +901,47 @@ export default {
         observer.observe(document.body, {
           attributes: true,
           subtree: true,
-          attributeFilter: ['class']
+          attributeFilter: ["class"],
         });
 
         // Add click outside listener
         const handleClickOutside = (event) => {
-          const yearDropdown = document.getElementById('dropdownYear');
-          const monthDropdown = document.getElementById('dropdownMonth');
-          const yearButton = document.getElementById('dropdownYearButton');
-          const monthButton = document.getElementById('dropdownMonthButton');
+          const yearDropdown = document.getElementById("dropdownYear");
+          const monthDropdown = document.getElementById("dropdownMonth");
+          const yearButton = document.getElementById("dropdownYearButton");
+          const monthButton = document.getElementById("dropdownMonthButton");
 
-          if (!yearDropdown?.contains(event.target) && !yearButton?.contains(event.target)) {
+          if (
+            !yearDropdown?.contains(event.target) &&
+            !yearButton?.contains(event.target)
+          ) {
             isYearDropdownOpen.value = false;
           }
-          if (!monthDropdown?.contains(event.target) && !monthButton?.contains(event.target)) {
+          if (
+            !monthDropdown?.contains(event.target) &&
+            !monthButton?.contains(event.target)
+          ) {
             isMonthDropdownOpen.value = false;
           }
         };
 
         // Add keyboard navigation
         const handleKeydown = (event) => {
-          if (event.key === 'Escape') {
+          if (event.key === "Escape") {
             closeAllDropdowns();
           }
         };
 
-        document.addEventListener('click', handleClickOutside);
-        document.addEventListener('keydown', handleKeydown);
+        document.addEventListener("click", handleClickOutside);
+        document.addEventListener("keydown", handleKeydown);
 
         // Store cleanup functions for onUnmounted
         window.dropdownCleanup = () => {
-          document.removeEventListener('click', handleClickOutside);
-          document.removeEventListener('keydown', handleKeydown);
+          document.removeEventListener("click", handleClickOutside);
+          document.removeEventListener("keydown", handleKeydown);
         };
-
       } catch (error) {
-        console.error('Error loading initial data:', error);
+        console.error("Error loading initial data:", error);
       } finally {
         isLoading.value = false;
       }

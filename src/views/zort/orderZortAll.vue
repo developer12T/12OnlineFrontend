@@ -20,7 +20,7 @@
                 class="bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-300"
               >
                 {{ row.status }}
-              </span> 
+              </span>
               <span
                 v-if="row.status === 'Voided'"
                 class="bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-blue-300"
@@ -81,6 +81,12 @@
                 v-else-if="row.saleschannel === 'Lazada'"
                 src="/lazada-icon.png"
                 width="15"
+                class="mr-1"
+              />
+              <img
+                v-else-if="row.saleschannel === 'TIKTOK'"
+                src="/tiktok.png"
+                width="25"
                 class="mr-1"
               />
               <span :title="row.saleschannel">{{ row.saleschannel }}</span>
