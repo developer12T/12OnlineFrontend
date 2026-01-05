@@ -23,7 +23,7 @@ export const useOrderStore = defineStore("order", {
   actions: {
     async setTab(tabName) {
       this.tabName = tabName;
-      await this.getOrderZort(); 
+      await this.getOrderZort();
     },
     async getOrderZort() {
       try {
@@ -31,14 +31,15 @@ export const useOrderStore = defineStore("order", {
         const pageName = localStorage.getItem("orderPage");
         const tabName = this.tabName;
         const reponse = await axios.post(
-          import.meta.env.VITE_API_BASE_URL +
-            "/zort/rest12Tzort/12Trading/getOrder",
+          import.meta.env.VITE_API_BASE_URL + "/online/api/order/all",
           {
             page: pageName,
-            tab: tabName,
+            tab: tabName
           },
           {
-            headers: { Authorization: `Bearer ${token}` },
+            headers: {
+              "x-channel": "uat"
+            }
           }
         );
         const result = reponse.data;
@@ -51,12 +52,12 @@ export const useOrderStore = defineStore("order", {
         console.error(error);
       }
     },
-    async getOrderZortHistory(page,month,year,search = '') {
+    async getOrderZortHistory(page, month, year, search = '') {
       try {
         const token = JSON.parse(localStorage.getItem("token"));
         const reponse = await axios.post(
           import.meta.env.VITE_API_BASE_URL +
-            "/zort/rest12Tzort/12Trading/getOrderHistory",
+          "/zort/rest12Tzort/12Trading/getOrderHistory",
           {
             month: month,
             year: year,
@@ -84,7 +85,7 @@ export const useOrderStore = defineStore("order", {
         const token = JSON.parse(localStorage.getItem("token"));
         const reponse = await axios.post(
           import.meta.env.VITE_API_BASE_URL +
-            "/zort/rest12Tzort/12Trading/getOrderOptions",
+          "/zort/rest12Tzort/12Trading/getOrderOptions",
           {
 
           },
@@ -105,7 +106,7 @@ export const useOrderStore = defineStore("order", {
         const token = JSON.parse(localStorage.getItem("token"));
         const reponse = await axios.post(
           import.meta.env.VITE_API_BASE_URL +
-            "/M3API/OrderManage/order/addOrderM3",
+          "/M3API/OrderManage/order/addOrderM3",
           {},
           {
             headers: { Authorization: `Bearer ${token}` },
@@ -120,7 +121,7 @@ export const useOrderStore = defineStore("order", {
     },
     async addDataOrderLog(order) {
       try {
-        const token = JSON.parse(localStorage.getItem("token"));     
+        const token = JSON.parse(localStorage.getItem("token"));
         if (order && order.length > 0) {
           // สร้างตัวแปรใหม่ที่เก็บข้อมูล 4 ฟิลด์
           const orderData = order.map(item => ({
@@ -129,8 +130,8 @@ export const useOrderStore = defineStore("order", {
             number: item.number,
             customerid: item.customerid
           }));
-          console.log("orderData", orderData); 
-          
+          console.log("orderData", orderData);
+
         }
       } catch (error) {
         console.error(error);
@@ -148,7 +149,7 @@ export const useOrderStore = defineStore("order", {
       } catch (error) {
         this.error = error.message || 'Error fetching orders'
         console.error(error)
-      } 
+      }
     },
   },
 });
