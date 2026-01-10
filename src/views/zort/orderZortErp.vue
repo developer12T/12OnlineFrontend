@@ -1,70 +1,65 @@
 <template>
-   <div :class="[
+  <div :class="[
     'p-4 transition-all duration-100 ease-in-out',
     isCollapsed ? 'ml-20' : 'ml-64'
   ]">
     <div class="p-4">
-      <div
-        class="flex flex-col-reverse sm:flex-row justify-end items-center mb-2"
-      >
+      <div class="flex flex-col-reverse sm:flex-row justify-end items-center mb-2">
         <div class="mr-auto">
           <CountOrderErp :data="filteredItems" :isLoading="isLoading" />
         </div>
-        <button v-if="tabs === 'wait-tab'" :class="{'opacity-50 cursor-not-allowed': isLoading}"
-          @click="addOrder()"
+        <button v-if="tabs === 'wait-tab'" :class="{ 'opacity-50 cursor-not-allowed': isLoading }" @click="addOrder()"
           type="button"
-          class="bg-[#C81E1E] hover:bg-[#C81E1E]/80 text-white border border-[#C81E1E] shadow-md hover:border-[#C81E1E]/80 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2 text-center mb-2 sm:mb-0 dark:bg-green-600 dark:text-green-500 dark:hover:text-white dark:hover:bg-green-700 dark:focus:ring-green-800 sm:ml-4 inline-flex items-center gap-2"
-        >
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M12 16c.41 0 .81-.03 1.21-.06c.19-.76.51-1.48.95-2.11c-.69.11-1.42.17-2.16.17c-2.42 0-4.7-.6-6-1.55V9.64c1.47.83 3.61 1.36 6 1.36s4.53-.53 6-1.36v1.55c.5-.12 1-.19 1.55-.19c.15 0 .3 0 .45.03V7c0-2.21-3.58-4-8-4S4 4.79 4 7v10c0 2.21 3.59 4 8 4c.66 0 1.31-.04 1.92-.12c-.35-.59-.61-1.24-.76-1.94c-.37.06-.75.06-1.16.06c-3.87 0-6-1.5-6-2v-2.23c1.61.78 3.72 1.23 6 1.23m0-11c3.87 0 6 1.5 6 2s-2.13 2-6 2s-6-1.5-6-2s2.13-2 6-2m11 12.5c0 .82-.25 1.58-.67 2.21l-1.09-1.09c.17-.34.26-.72.26-1.12A2.5 2.5 0 0 0 19 15v1.5l-2.25-2.25L19 12v1.5c2.21 0 4 1.79 4 4m-4 1l2.25 2.25L19 23v-1.5c-2.21 0-4-1.79-4-4c0-.82.25-1.58.67-2.21l1.09 1.09c-.17.34-.26.72-.26 1.12A2.5 2.5 0 0 0 19 20z"/></svg>
+          class="bg-[#C81E1E] hover:bg-[#C81E1E]/80 text-white border border-[#C81E1E] shadow-md hover:border-[#C81E1E]/80 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2 text-center mb-2 sm:mb-0 dark:bg-green-600 dark:text-green-500 dark:hover:text-white dark:hover:bg-green-700 dark:focus:ring-green-800 sm:ml-4 inline-flex items-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+            <path fill="currentColor"
+              d="M12 16c.41 0 .81-.03 1.21-.06c.19-.76.51-1.48.95-2.11c-.69.11-1.42.17-2.16.17c-2.42 0-4.7-.6-6-1.55V9.64c1.47.83 3.61 1.36 6 1.36s4.53-.53 6-1.36v1.55c.5-.12 1-.19 1.55-.19c.15 0 .3 0 .45.03V7c0-2.21-3.58-4-8-4S4 4.79 4 7v10c0 2.21 3.59 4 8 4c.66 0 1.31-.04 1.92-.12c-.35-.59-.61-1.24-.76-1.94c-.37.06-.75.06-1.16.06c-3.87 0-6-1.5-6-2v-2.23c1.61.78 3.72 1.23 6 1.23m0-11c3.87 0 6 1.5 6 2s-2.13 2-6 2s-6-1.5-6-2s2.13-2 6-2m11 12.5c0 .82-.25 1.58-.67 2.21l-1.09-1.09c.17-.34.26-.72.26-1.12A2.5 2.5 0 0 0 19 15v1.5l-2.25-2.25L19 12v1.5c2.21 0 4 1.79 4 4m-4 1l2.25 2.25L19 23v-1.5c-2.21 0-4-1.79-4-4c0-.82.25-1.58.67-2.21l1.09 1.09c-.17.34-.26.72-.26 1.12A2.5 2.5 0 0 0 19 20z" />
+          </svg>
           นำเข้าระบบ
         </button>
         <div class="flex items-center sm:order-2 mb-4 sm:mb-0 ml-4">
-        <SearchBar :searchBar="textInput" @search="handleSearch" />
+          <SearchBar :searchBar="textInput" @search="handleSearch" />
+        </div>
       </div>
-      </div>
-  
+
       <div
-        class="text-sm flex items-center justify-between font-medium text-center mb-1 text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700 bg-white rounded-lg"
-      >
+        class="text-sm flex items-center justify-between font-medium text-center mb-1 text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700 bg-white rounded-lg">
         <ul class="flex w-1/3 flex-wrap -mb-px">
           <li class="mr-2">
-            <a
-              @click="handleTabs('wait-tab')"
-              :class="{
-                'inline-flex items-center p-3 text-[#0369A1] border-b-2 border-[#0369A1] rounded-t-lg active dark:text-blue-500 dark:border-blue-500 cursor-pointer':
-                  tabs === 'wait-tab',
-                'inline-flex items-center p-3 border-b-2 border-transparent rounded-t-lg hover:text-[#0369A1] hover:border-[#0369A1] dark:hover:text-gray-300 cursor-pointer':
-                  tabs !== 'wait-tab',
-              }"
-              aria-current="page"
-            >
+            <a @click="handleTabs('wait-tab')" :class="{
+              'inline-flex items-center p-3 text-[#0369A1] border-b-2 border-[#0369A1] rounded-t-lg active dark:text-blue-500 dark:border-blue-500 cursor-pointer':
+                tabs === 'wait-tab',
+              'inline-flex items-center p-3 border-b-2 border-transparent rounded-t-lg hover:text-[#0369A1] hover:border-[#0369A1] dark:hover:text-gray-300 cursor-pointer':
+                tabs !== 'wait-tab',
+            }" aria-current="page">
               <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
               รอนำเข้าระบบ
             </a>
           </li>
           <li class="mr-2">
-            <a
-              @click="handleTabs('success-tab')"
-              :class="{
-                'inline-flex items-center p-3 text-[#0369A1] border-b-2 border-[#0369A1] rounded-t-lg  dark:text-blue-500 dark:border-blue-500 cursor-pointer':
-                  tabs === 'success-tab',
-                'inline-flex items-center p-3 border-b-2 border-transparent rounded-t-lg hover:text-[#0369A1] hover:border-[#0369A1] dark:hover:text-gray-300 cursor-pointer':
-                  tabs !== 'success-tab',
-              }"
-            >
+            <a @click="handleTabs('success-tab')" :class="{
+              'inline-flex items-center p-3 text-[#0369A1] border-b-2 border-[#0369A1] rounded-t-lg  dark:text-blue-500 dark:border-blue-500 cursor-pointer':
+                tabs === 'success-tab',
+              'inline-flex items-center p-3 border-b-2 border-transparent rounded-t-lg hover:text-[#0369A1] hover:border-[#0369A1] dark:hover:text-gray-300 cursor-pointer':
+                tabs !== 'success-tab',
+            }">
               <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
               นำเข้าระบบสำเร็จ
             </a>
           </li>
         </ul>
         <div class="flex items-center w-2/3 justify-end">
-          <div class="flex items-center bg-gradient-to-r from-red-100 to-red-200 text-red-800 rounded-md px-4 mr-2 shadow-md font-medium">
+          <div
+            class="flex items-center bg-gradient-to-r from-red-100 to-red-200 text-red-800 rounded-md px-4 mr-2 shadow-md font-medium">
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
             <span class="text-sm">Inv ล่าสุด:</span>
             <span class="text-lg font-bold ml-1">{{ inv.InvLastno }}</span>
@@ -94,8 +89,10 @@
                     <div class="absolute top-1 right-1 w-1 h-1 bg-yellow-300 rounded-full"></div>
                   </div>
                   <!-- Car Wheels -->
-                  <div class="absolute -bottom-1 left-1 w-3 h-3 bg-gray-800 rounded-full border-2 border-gray-600"></div>
-                  <div class="absolute -bottom-1 right-1 w-3 h-3 bg-gray-800 rounded-full border-2 border-gray-600"></div>
+                  <div class="absolute -bottom-1 left-1 w-3 h-3 bg-gray-800 rounded-full border-2 border-gray-600">
+                  </div>
+                  <div class="absolute -bottom-1 right-1 w-3 h-3 bg-gray-800 rounded-full border-2 border-gray-600">
+                  </div>
                   <!-- Wheel Spokes -->
                   <div class="absolute -bottom-1 left-1 w-3 h-3 flex items-center justify-center">
                     <div class="w-1 h-1 bg-gray-400 rounded-full"></div>
@@ -120,78 +117,52 @@
             </div>
           </div>
         </div>
-        
+
         <Table :columns="tableColumns" :data="filteredItems" v-if="filteredItems.length > 0">
           <template v-slot:status="{ row }">
             <div class="flex items-center justify-center">
-              <span
-                v-if="row.status === 'Success'"
-                class="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300"
-              >
+              <span v-if="row.status === 'Success'"
+                class="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">
                 {{ row.status }}
               </span>
-              <span
-                v-if="row.status === 'Pending'"
-                class="bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-300"
-              >
+              <span v-if="row.status === 'Pending'"
+                class="bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-300">
                 {{ row.status }}
               </span>
-              <span
-                v-if="row.status === 'Voided'"
-                class="bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300"
-              >
+              <span v-if="row.status === 'Voided'"
+                class="bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300">
                 {{ row.status }}
               </span>
-              <span
-                v-if="row.status === 'Waiting'"
-                class="bg-yellow-100 text-yellow-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-yellow-900 dark:text-yellow-300"
-              >
+              <span v-if="row.status === 'Waiting'"
+                class="bg-yellow-100 text-yellow-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-yellow-900 dark:text-yellow-300">
                 {{ row.status }}
               </span>
             </div>
           </template>
           <template v-slot:paymentstatus="{ row }">
             <div class="flex items-center justify-center">
-              <span
-                v-if="row.paymentstatus === 'Paid'"
-                class="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300"
-              >
+              <span v-if="row.paymentstatus === 'Paid'"
+                class="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">
                 {{ row.paymentstatus }}
               </span>
-              <span
-                v-if="row.paymentstatus === 'Pending'"
-                class="bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-300"
-              >
+              <span v-if="row.paymentstatus === 'Pending'"
+                class="bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-300">
                 {{ row.paymentstatus }}
               </span>
-              <span
-                v-if="row.paymentstatus === 'Voided'"
-                class="bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300"
-              >
+              <span v-if="row.paymentstatus === 'Voided'"
+                class="bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300">
                 {{ row.paymentstatus }}
               </span>
             </div>
           </template>
           <template v-slot:saleschannel="{ row }">
             <div class="flex items-center justify-center">
-              <img
-                v-if="row.saleschannel === 'Shopee'"
-                src="/shopee-icon.png"
-                width="25"
-                class="mr-1"
-              />
-              <img
-                v-if="row.saleschannel === 'Makro'"
-                src="/makro.png"
-                width="25"
-                class="mr-1"
-              />
-              <img
-                v-else-if="row.saleschannel === 'Lazada'"
-                src="/lazada-icon.png"
-                width="25"
-                class="mr-1"
-              />
+              <img v-if="row.saleschannel === 'Shopee'" src="/shopee-icon.png" width="25" class="mr-1" />
+              <img v-if="row.saleschannel === 'Makro'" src="/makro.png" width="25" class="mr-1" />
+              <img v-else-if="row.saleschannel === 'Lazada'" src="/lazada-icon.png" width="25" class="mr-1" />
+              <img v-else-if="row.saleschannel === 'TIKTOK'" src="/tiktok.png" width="25" class="mr-1" />
+              <img v-else-if="row.saleschannel === 'Amaze'" src="/amaze.png" width="25" class="mr-1" />
+
             </div>
           </template>
         </Table>
@@ -200,19 +171,19 @@
             <!-- Empty State Icon -->
             <div class="mb-4">
               <svg class="mx-auto h-16 w-16 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
+                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
             </div>
             <!-- Empty State Text -->
             <h3 class="text-lg font-medium text-gray-900 mb-2">ไม่มีข้อมูลรอนำเข้าระบบ</h3>
             <p class="text-gray-500 text-sm mb-4">ยังไม่มีรายการที่รอการนำเข้าระบบ ERP</p>
             <!-- Action Button -->
-            <button 
-              @click="refreshData"
-              class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-            >
+            <button @click="refreshData"
+              class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
               <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
               </svg>
               รีเฟรชข้อมูล
             </button>
@@ -255,14 +226,14 @@ export default {
     const orders = computed(() => {
       return store.zortOrder;
     });
-    
+
     const storeDb = useDashboardStore();
     const inv = computed(() => {
       return storeDb.zortDashboard;
     });
 
+
     const addOrder = async () => {
-      // แสดง popup ยืนยันก่อน
       const result = await Swal.fire({
         title: 'ยืนยันการนำเข้าระบบ',
         text: 'คุณต้องการนำข้อมูลเข้าสู่ระบบ ERP หรือไม่?',
@@ -273,41 +244,102 @@ export default {
         confirmButtonText: 'ยืนยัน',
         cancelButtonText: 'ยกเลิก',
         reverseButtons: true
-      });
+      })
 
-      // ถ้าผู้ใช้กดยืนยัน
-      if (result.isConfirmed) {
-        try {
-          Swal.fire({
-            icon: "info",
-            title: "กำลังนำเข้าระบบ",
-            text: "กรุณารอสักครู่...",
-            showConfirmButton: false,
-            allowOutsideClick: false,
-          });
-          // สร้าง store แล้วส่งข้อมูล filteredItems ไป
-          // filteredItems คือข้อมูลที่กรองแล้วจากตาราง
-          // สมมติว่า filteredItems คือ computed property ที่มีอยู่ใน component นี้
-          // ส่ง filteredItems ไปที่ store (เช่น อาจจะมี action หรือ mutation ใน store)
-          // await store.addDataOrderLog(filteredItems.value);
-          await store.addOrderErp();
-          Swal.fire({
-            icon: "success",
-            title: "สำเร็จ!",
-            text: "นำเข้าระบบสำเร็จ",
-          });
-          await afterAdded();
-        } catch (error) {
-          console.log(error);
-          Swal.hideLoading();
-          Swal.fire({
-            icon: "error",
-            title: "เกิดข้อผิดพลาด!",
-            text: "ไม่สามารถนำเข้าระบบได้",
-          });
-        }
+      if (!result.isConfirmed) return
+
+      try {
+        Swal.fire({
+          icon: 'info',
+          title: 'กำลังนำเข้าระบบ',
+          text: 'กรุณารอสักครู่...',
+          showConfirmButton: false,
+          allowOutsideClick: false
+        })
+
+        // ✅ ต้องให้ store.addOrderErp return response.data
+        const erpRes = await store.addOrderErp(filteredItems.value)
+
+        Swal.close()
+
+        const successfulOrders = erpRes?.successfulOrders ?? []
+        const failedOrders = erpRes?.failedOrders ?? []
+        const message = erpRes?.message ?? ''
+
+        const successListHtml = successfulOrders.length
+          ? `
+        <div style="text-align:left;margin-top:8px">
+          <div style="font-weight:700;margin-bottom:6px">✅ เข้าระบบแล้ว (${successfulOrders.length})</div>
+          <ul style="margin:0;padding-left:18px">
+            ${successfulOrders
+            .map(o => `<li><b>${o.orderNo}</b> <span style="color:#16a34a">(${o.status || 'success'})</span></li>`)
+            .join('')}
+          </ul>
+        </div>
+      `
+          : `<div style="text-align:left;margin-top:8px"><b>✅ เข้าระบบแล้ว:</b> ไม่มี</div>`
+
+        const failedListHtml = failedOrders.length
+          ? `
+        <div style="text-align:left;margin-top:12px">
+          <div style="font-weight:700;margin-bottom:6px">❌ เข้าไม่ได้ (${failedOrders.length})</div>
+          <ul style="margin:0;padding-left:18px">
+            ${failedOrders
+            .map(
+              o =>
+                `<li>
+                    <b>${o.orderNo}</b>
+                    <div style="color:#dc2626;white-space:pre-wrap;font-size:12px;margin-top:2px">
+                      ${String(o.error || '').replaceAll('<', '&lt;').replaceAll('>', '&gt;')}
+                    </div>
+                  </li>`
+            )
+            .join('')}
+          </ul>
+        </div>
+      `
+          : `<div style="text-align:left;margin-top:12px"><b>❌ เข้าไม่ได้:</b> ไม่มี</div>`
+
+        // เลือก icon ตามผลลัพธ์
+        const icon =
+          failedOrders.length > 0 && successfulOrders.length > 0
+            ? 'warning'
+            : failedOrders.length > 0
+              ? 'error'
+              : 'success'
+
+        const title =
+          failedOrders.length > 0 && successfulOrders.length > 0
+            ? 'นำเข้าสำเร็จบางส่วน'
+            : failedOrders.length > 0
+              ? 'นำเข้าไม่สำเร็จ'
+              : 'นำเข้าสำเร็จ'
+
+        await Swal.fire({
+          icon,
+          title,
+          html: `
+        <div style="margin-bottom:6px;color:#374151">${message}</div>
+        ${successListHtml}
+        ${failedListHtml}
+      `,
+          confirmButtonText: 'ปิด'
+        })
+
+        // ถ้าต้องการ refresh หลังทำเสร็จ
+        await afterAdded()
+
+      } catch (error) {
+        console.log(error)
+        Swal.close()
+        Swal.fire({
+          icon: 'error',
+          title: 'เกิดข้อผิดพลาด!',
+          text: 'ไม่สามารถนำเข้าระบบได้'
+        })
       }
-    };
+    }
+
 
     const selected = ref([]);
     const isItemSelected = ref(false);
@@ -328,7 +360,7 @@ export default {
 
     const tabs = ref("wait-tab");
     const isLoading = ref(false);
-    
+
     const handleTabs = async (tabName) => {
       try {
         isLoading.value = true;
@@ -426,9 +458,11 @@ export default {
   0% {
     transform: translateX(-100%);
   }
+
   50% {
     transform: translateX(250%);
   }
+
   100% {
     transform: translateX(-100%);
   }
@@ -439,9 +473,11 @@ export default {
     transform: translateX(0) scale(0);
     opacity: 0;
   }
+
   50% {
     opacity: 0.6;
   }
+
   100% {
     transform: translateX(60px) scale(1);
     opacity: 0;
@@ -466,6 +502,7 @@ export default {
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }

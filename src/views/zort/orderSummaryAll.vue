@@ -157,15 +157,24 @@ const printPage = () => {
 
 
 <style scoped>
+html,
+body,
+#app {
+    height: auto !important;
+    min-height: 100% !important;
+    overflow-y: auto !important;
+}
+
 .a4-pages {
     display: flex;
+    overflow-y: auto;
     flex-direction: column;
     align-items: center;
 }
 
 .wrap-text {
-  white-space: normal;
-  word-wrap: break-word;
+    white-space: normal;
+    word-wrap: break-word;
 }
 
 .a4-page {
@@ -227,6 +236,7 @@ const printPage = () => {
 }
 
 @media print {
+
     aside,
     nav {
         display: none !important;
@@ -251,6 +261,7 @@ const printPage = () => {
         margin: 0 auto;
         width: auto;
         height: auto;
+        overflow-y: auto;
         padding: 15mm;
         background: white;
         box-shadow: none;
