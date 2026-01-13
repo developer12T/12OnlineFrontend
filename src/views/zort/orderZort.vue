@@ -61,24 +61,6 @@
         </button>
       </div>
       <div class="flex items-center rounded-lg p-2" v-else-if="this.tabs === 'success-tab'">
-        <!-- <button @click="showPrintIframeSuccess()"
-          class="me-3 bg-[#4CAF50] shadow-md flex items-center hover:bg-green-600 text-white border border-[#4CAF50] hover:border-green-600 focus:ring-4 focus:outline-none focus:ring-green-300 gap-2 font-medium rounded-md text-sm px-5 py-2 text-center mb-2 sm:mb-0 dark:bg-green-600 dark:text-green-500 dark:hover:text-white dark:hover:bg-green-700 dark:focus:ring-green-800 sm:ml-4"
-          :class="{ 'pointer-events-none': !isItemSelected }">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 48 48">
-            <path fill="#424242" d="M9 11h30v3H9z" />
-            <path fill="#616161" d="M4 25h40v-7c0-2.2-1.8-4-4-4H8c-2.2 0-4 1.8-4 4z" />
-            <path fill="#424242" d="M8 36h32c2.2 0 4-1.8 4-4v-8H4v8c0 2.2 1.8 4 4 4" />
-            <circle cx="40" cy="18" r="1" fill="#00e676" />
-            <path fill="#90caf9" d="M11 4h26v10H11z" />
-            <path fill="#242424"
-              d="M37.5 31h-27c-.8 0-1.5-.7-1.5-1.5s.7-1.5 1.5-1.5h27c.8 0 1.5.7 1.5 1.5s-.7 1.5-1.5 1.5" />
-            <path fill="#90caf9" d="M11 31h26v11H11z" />
-            <path fill="#42a5f5" d="M11 29h26v2H11z" />
-            <path fill="#1976d2" d="M16 33h17v2H16zm0 4h13v2H16z" />
-          </svg>
-          พิมพ์ต้นฉบับ สำเร็จ
-          {{ selected.length > 0 ? selected.length + " ใบ" : "" }}
-        </button> -->
         <button @click="showPrintIframeAndCopy()"
           class="bg-[#4CAF50] flex items-center hover:bg-green-600 text-white border border-green-500 hover:border-green-600 focus:ring-4 focus:outline-none focus:ring-green-300 gap-2 font-medium rounded-md text-sm px-5 py-2 text-center mb-2 sm:mb-0 dark:bg-green-600 dark:text-green-500 dark:hover:text-white dark:hover:bg-green-700 dark:focus:ring-green-800 mr-1"
           :class="{ 'pointer-events-none': !isItemSelected }">
@@ -294,6 +276,8 @@
                   <img v-else-if="row.saleschannel === 'Lazada'" src="/lazada-icon.png" width="25" class="mr-1" />
                   <img v-else-if="row.saleschannel === 'TIKTOK'" src="/tiktok.png" width="25" class="mr-1" />
                   <img v-else-if="row.saleschannel === 'Amaze'" src="/amaze.png" width="25" class="mr-1" />
+                  <img v-if="row.saleschannel === 'Makro'" src="/makro.png" width="25" class="mr-1" />
+
                   <span :title="row.saleschannel"></span>
                 </div>
               </template>
@@ -433,19 +417,34 @@ export default {
 
 
 
+    const showPrintIframeCopy = async () => {
+      if (selected.value.length === 0) return;
 
-    const showPrintIframeSuccess = () => {
-      if (selected.value.length > 0) {
-        iframeSrc.value = `http://58.181.206.156:8080/12Trading/zort_pdf/printReceiptOriginalSuccess.php?checklist=${selected.value}`;
-        showIframe.value = true;
-      }
-    };
+      // 1️⃣ เปิด modal ก่อน
+      showIframe.value = true;
 
-    const showPrintIframeCopy = () => {
-      if (selected.value.length > 0) {
-        iframeSrc.value = `http://58.181.206.156:8080/12Trading/zort_pdf/printReceiptCopy.php?checklist=${selected.value}`;
-        showIframe.value = true;
-      }
+      // 2️⃣ รอให้ iframe ถูก render ลง DOM
+      await nextTick();
+
+      const PRINT_API =
+        import.meta.env.VITE_API_BASE_URL + "/online/print/copy";
+
+      const form = document.createElement("form");
+      form.method = "POST";
+      form.action = PRINT_API;
+      form.target = "printIframe";
+
+      const input = document.createElement("input");
+      input.type = "hidden";
+      input.name = "checklist";
+      input.value = JSON.stringify(selected.value);
+
+      form.appendChild(input);
+      document.body.appendChild(form);
+
+      // 3️⃣ submit หลัง iframe มีจริงแล้ว
+      form.submit();
+      document.body.removeChild(form);
     };
 
     const closeIframe = () => {
@@ -620,7 +619,6 @@ export default {
       showIframe,
       iframeSrc,
       showPrintIframe,
-      showPrintIframeSuccess,
       showPrintIframeAndCopy,
       showPrintIframeCopy,
       closeIframe,

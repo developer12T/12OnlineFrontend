@@ -93,12 +93,12 @@
                   <span class="ml-4">รอนำเข้า ERP</span>
                 </a>
               </li>
-              <li>
+              <!-- <li>
                 <a href="/onlineManage/order/history" @click="setPage('history')"
                   class="flex items-center w-full p-2 text-gray-200 hover:text-white hover:bg-sky-600 transition-all duration-200 ease-in-out rounded text-sm transform hover:scale-105">
                   <span class="ml-4">ประวัติ</span>
                 </a>
-              </li>
+              </li> -->
               <li>
                 <a href="/onlineManage/order/reprint" @click="setPage('reprint')"
                   class="flex items-center w-full p-2 text-gray-200 hover:text-white hover:bg-sky-600 transition-all duration-200 ease-in-out rounded text-sm transform hover:scale-105">
@@ -353,7 +353,7 @@
             <span class="transition-all duration-200 ease-in-out">รอนำเข้า ERP</span>
           </div>
         </a>
-        <a href="/onlineManage/order/history" @click="setPage('history'); hidePopup()"
+        <!-- <a href="/onlineManage/order/history" @click="setPage('history'); hidePopup()"
           class="block px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-sky-600 rounded transition-all duration-200 ease-in-out transform hover:scale-105">
           <div class="flex items-center space-x-2">
             <svg class="w-4 h-4 transition-all duration-200 ease-in-out" fill="currentColor" viewBox="0 0 20 20">
@@ -363,7 +363,7 @@
             </svg>
             <span class="transition-all duration-200 ease-in-out">ประวัติ</span>
           </div>
-        </a>
+        </a> -->
         <a href="/onlineManage/order/reprint" @click="setPage('summary'); hidePopup()"
           class="block px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-sky-600 rounded transition-all duration-200 ease-in-out transform hover:scale-105">
           <div class="flex items-center space-x-2">

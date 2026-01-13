@@ -1,10 +1,8 @@
 <template>
-  <div
-    :class="[
-      'p-4 transition-all duration-100 ease-in-out',
-      isCollapsed ? 'ml-20' : 'ml-64',
-    ]"
-  >
+  <div :class="[
+    'p-4 transition-all duration-100 ease-in-out',
+    isCollapsed ? 'ml-20' : 'ml-64',
+  ]">
     <div class="p-4">
       <div class="flex flex-col-reverse sm:flex-row justify-end items-center mb-4">
         <div class="mr-auto flex items-center space-x-3 ml-2">
@@ -12,32 +10,20 @@
           <div class="flex items-center space-x-2 bg-white rounded-lg p-2 shadow-md">
             <div class="flex items-center space-x-2">
               <label class="text-sm font-medium text-gray-700">วันที่เริ่มต้น:</label>
-              <input
-                v-model="startDate"
-                type="text"
-                placeholder="YYYY-MM-DD"
-                class="px-3 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
-              />
+              <input v-model="startDate" type="text" placeholder="YYYY-MM-DD"
+                class="px-3 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm" />
             </div>
             <div class="flex items-center space-x-2">
               <label class="text-sm font-medium text-gray-700">วันที่สิ้นสุด:</label>
-              <input
-                v-model="endDate"
-                type="text"
-                placeholder="YYYY-MM-DD"
-                class="px-3 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
-              />
+              <input v-model="endDate" type="text" placeholder="YYYY-MM-DD"
+                class="px-3 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm" />
             </div>
-            <button
-              @click="searchDate"
-              class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-1 rounded text-sm font-medium transition-colors"
-            >
+            <button @click="searchDate"
+              class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-1 rounded text-sm font-medium transition-colors">
               ค้นหา
             </button>
-            <button
-              @click="clearDateFilter"
-              class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-1 rounded text-sm font-medium transition-colors"
-            >
+            <button @click="clearDateFilter"
+              class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-1 rounded text-sm font-medium transition-colors">
               ล้าง
             </button>
           </div>
@@ -50,36 +36,23 @@
 
         <!-- Print Buttons -->
         <div class="flex items-center space-x-2">
-          <button
-            @click="printCopy"
+          <button @click="printCopy"
             class="bg-green-500 hover:bg-green-600 text-white shadow-lg border border-green-500 hover:border-green-600 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-md text-sm px-5 py-2 text-center mb-2 sm:mb-0 dark:bg-green-600 dark:text-green-500 dark:hover:text-white dark:hover:bg-green-700 dark:focus:ring-green-800"
-            :class="{ 'pointer-events-none opacity-50': !isItemSelected }"
-          >
+            :class="{ 'pointer-events-none opacity-50': !isItemSelected }">
             พิมพ์สำเนา
             {{ selected.length > 0 ? selected.length + " ใบ" : "" }}
           </button>
-          <button
-            @click="printAll"
-            class="bg-blue-500 hover:bg-blue-600 text-white shadow-lg border border-blue-500 hover:border-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-sm px-5 py-2 text-center mb-2 sm:mb-0 dark:bg-blue-600 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-          >
+          <button @click="printAll"
+            class="bg-blue-500 hover:bg-blue-600 text-white shadow-lg border border-blue-500 hover:border-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-sm px-5 py-2 text-center mb-2 sm:mb-0 dark:bg-blue-600 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-700 dark:focus:ring-blue-800">
             พิมพ์ทั้งหมด
             {{ filteredItems.length > 0 ? filteredItems.length + " ใบ" : "" }}
           </button>
-          <button
-            @click="printSummary(selected)"
+          <button @click="printSummary(selected)"
             class="bg-[#007BFF] shadow-md flex items-center hover:bg-green-600 text-white border border-[#007BFF] hover:border-green-600 focus:ring-4 focus:outline-none focus:ring-green-300 gap-2 font-medium rounded-md text-sm px-5 py-2 text-center mb-2 sm:mb-0 dark:bg-green-600 dark:text-green-500 dark:hover:text-white dark:hover:bg-green-700 dark:focus:ring-green-800 sm:ml-4"
-            :class="{ 'pointer-events-none': !isItemSelected }"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-            >
-              <path
-                fill="currentColor"
-                d="M9 18q-.825 0-1.412-.587T7 16V4q0-.825.588-1.412T9 2h9q.825 0 1.413.588T20 4v12q0 .825-.587 1.413T18 18zm0-2h9V4H9zM4 8q-.425 0-.712-.288T3 7t.288-.712T4 6t.713.288T5 7t-.288.713T4 8m0 3.5q-.425 0-.712-.288T3 10.5t.288-.712T4 9.5t.713.288T5 10.5t-.288.713T4 11.5M4 15q-.425 0-.712-.288T3 14t.288-.712T4 13t.713.288T5 14t-.288.713T4 15m0 3.5q-.425 0-.712-.288T3 17.5t.288-.712T4 16.5t.713.288T5 17.5t-.288.713T4 18.5M4 22q-.425 0-.712-.288T3 21t.288-.712T4 20t.713.288T5 21t-.288.713T4 22m3.5 0q-.425 0-.712-.288T6.5 21t.288-.712T7.5 20t.713.288T8.5 21t-.288.713T7.5 22m3.5 0q-.425 0-.712-.288T10 21t.288-.712T11 20t.713.288T12 21t-.288.713T11 22m3.5 0q-.425 0-.712-.288T13.5 21t.288-.712T14.5 20t.713.288t.287.712t-.288.713T14.5 22"
-              />
+            :class="{ 'pointer-events-none': !isItemSelected }">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+              <path fill="currentColor"
+                d="M9 18q-.825 0-1.412-.587T7 16V4q0-.825.588-1.412T9 2h9q.825 0 1.413.588T20 4v12q0 .825-.587 1.413T18 18zm0-2h9V4H9zM4 8q-.425 0-.712-.288T3 7t.288-.712T4 6t.713.288T5 7t-.288.713T4 8m0 3.5q-.425 0-.712-.288T3 10.5t.288-.712T4 9.5t.713.288T5 10.5t-.288.713T4 11.5M4 15q-.425 0-.712-.288T3 14t.288-.712T4 13t.713.288T5 14t-.288.713T4 15m0 3.5q-.425 0-.712-.288T3 17.5t.288-.712T4 16.5t.713.288T5 17.5t-.288.713T4 18.5M4 22q-.425 0-.712-.288T3 21t.288-.712T4 20t.713.288T5 21t-.288.713T4 22m3.5 0q-.425 0-.712-.288T6.5 21t.288-.712T7.5 20t.713.288T8.5 21t-.288.713T7.5 22m3.5 0q-.425 0-.712-.288T10 21t.288-.712T11 20t.713.288T12 21t-.288.713T11 22m3.5 0q-.425 0-.712-.288T13.5 21t.288-.712T14.5 20t.713.288t.287.712t-.288.713T14.5 22" />
             </svg>
             ใบรวม
             {{ selected.length > 0 ? selected.length + " รายการ" : "" }}
@@ -106,15 +79,9 @@
           </div> -->
 
             <!-- Date-wise Badges -->
-            <div
-              v-if="dateWiseCounts.length > 0"
-              class="flex items-center space-x-2 flex-wrap"
-            >
-              <span
-                v-for="dateCount in dateWiseCounts"
-                :key="dateCount.date"
-                class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded-full"
-              >
+            <div v-if="dateWiseCounts.length > 0" class="flex items-center space-x-2 flex-wrap">
+              <span v-for="dateCount in dateWiseCounts" :key="dateCount.date"
+                class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
                 {{ dateCount.date }} : {{ dateCount.count }} รายการ
               </span>
             </div>
@@ -135,13 +102,9 @@
       <!-- Table Container -->
       <div
         class="relative flex justify-center m-2 mt-0 md:h-[470px] lg:h-[650px] overflow-y-scroll shadow-md sm:rounded-lg"
-        style="height: calc(100vh - 280px)"
-      >
+        style="height: calc(100vh - 280px)">
         <!-- Loading Overlay -->
-        <div
-          v-if="isLoading"
-          class="absolute inset-0 bg-white flex items-center justify-center z-50"
-        >
+        <div v-if="isLoading" class="absolute inset-0 bg-white flex items-center justify-center z-50">
           <div class="flex flex-col items-center space-y-6">
             <!-- Loading Animation -->
             <div class="relative w-64 h-16 overflow-hidden">
@@ -149,25 +112,15 @@
               <div class="absolute bottom-2 animate-car">
                 <div class="relative">
                   <div class="w-16 h-8 bg-[#0369A1] rounded-lg relative">
-                    <div
-                      class="absolute top-1 left-2 w-3 h-2 bg-blue-200 rounded-sm"
-                    ></div>
-                    <div
-                      class="absolute top-1 right-2 w-3 h-2 bg-blue-200 rounded-sm"
-                    ></div>
-                    <div
-                      class="absolute top-1 left-1 w-1 h-1 bg-yellow-300 rounded-full"
-                    ></div>
-                    <div
-                      class="absolute top-1 right-1 w-1 h-1 bg-yellow-300 rounded-full"
-                    ></div>
+                    <div class="absolute top-1 left-2 w-3 h-2 bg-blue-200 rounded-sm"></div>
+                    <div class="absolute top-1 right-2 w-3 h-2 bg-blue-200 rounded-sm"></div>
+                    <div class="absolute top-1 left-1 w-1 h-1 bg-yellow-300 rounded-full"></div>
+                    <div class="absolute top-1 right-1 w-1 h-1 bg-yellow-300 rounded-full"></div>
                   </div>
-                  <div
-                    class="absolute -bottom-1 left-1 w-3 h-3 bg-gray-800 rounded-full border-2 border-gray-600"
-                  ></div>
-                  <div
-                    class="absolute -bottom-1 right-1 w-3 h-3 bg-gray-800 rounded-full border-2 border-gray-600"
-                  ></div>
+                  <div class="absolute -bottom-1 left-1 w-3 h-3 bg-gray-800 rounded-full border-2 border-gray-600">
+                  </div>
+                  <div class="absolute -bottom-1 right-1 w-3 h-3 bg-gray-800 rounded-full border-2 border-gray-600">
+                  </div>
                 </div>
               </div>
             </div>
@@ -182,13 +135,8 @@
 
         <!-- Table -->
         <div v-else class="w-full">
-          <TableOrder
-            :data="filteredItems"
-            :columns="tableColumns"
-            :selected="selected"
-            @selected-update="onSelectedUpdate"
-            :isLoading="isLoading"
-          />
+          <TableOrder :data="filteredItems" :columns="tableColumns" :selected="selected"
+            @selected-update="onSelectedUpdate" :isLoading="isLoading" />
         </div>
       </div>
     </div>
@@ -323,7 +271,7 @@ export default {
         const token = JSON.parse(localStorage.getItem("token"));
         // เรียก API เพื่อโหลดข้อมูลตาม date range
         const response = await fetch(
-          "http://192.168.2.97:8383/zort/rest12Tzort/12Trading/getOrder",
+          import.meta.env.VITE_API_BASE_URL + '/online/api/order/all',
           {
             method: "POST",
             headers: {
@@ -580,7 +528,7 @@ export default {
     onMounted(async () => {
       try {
         checkSidebarState();
-      
+
         // Load saved date values from localStorage
         const savedStartDate = localStorage.getItem("reprintStartDate");
         const savedEndDate = localStorage.getItem("reprintEndDate");
@@ -662,9 +610,11 @@ export default {
   0% {
     transform: translateX(-100%);
   }
+
   50% {
     transform: translateX(250%);
   }
+
   100% {
     transform: translateX(-100%);
   }
@@ -675,9 +625,11 @@ export default {
     transform: translateX(0) scale(0);
     opacity: 0;
   }
+
   50% {
     opacity: 0.6;
   }
+
   100% {
     transform: translateX(60px) scale(1);
     opacity: 0;
@@ -702,6 +654,7 @@ export default {
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }

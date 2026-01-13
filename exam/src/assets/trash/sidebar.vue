@@ -135,7 +135,7 @@ button:hover .icon {
           >
             <Icon class="icon" height="24" icon="fluent:receipt-add-20-regular" width="24"/>
             <span style="font-size: 10px">รับยา</span></router-link>
-          <router-link :class="{
+          <!-- <router-link :class="{
                 'flex justify-center rounded-lg flex-col items-center p-2 active:text-blue-500 group text-blue-700 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 w-100':
                   pageName === 'hisReq',
                 'flex items-center p-2 flex-col justify-center active:text-blue-500 rounded-lg group text-gray-800-700 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 w-100':
@@ -146,7 +146,7 @@ button:hover .icon {
                        @click="handlePage('hisReq')"
           >
             <Icon class="icon" height="24" icon="material-symbols:history-edu" width="24"/>
-            <span style="font-size: 10px">ประวัติ</span></router-link>
+            <span style="font-size: 10px">ประวัติ</span></router-link> -->
 
           <router-link :class="{
                 'flex justify-center rounded-lg flex-col items-center p-2 active:text-blue-500 group text-blue-700 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 w-100':
