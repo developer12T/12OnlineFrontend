@@ -45,9 +45,9 @@ export const useOrderStore = defineStore('order', {
         const result = reponse.data
         this.zortOrder = result
         // localStorage.setItem('zortOrder', JSON.stringify(result));
-        console.log('orderzort', this.zortOrder)
-        console.log('orderpage', pageName)
-        console.log('orderpage', tabName)
+        // console.log('orderzort', this.zortOrder)
+        // console.log('orderpage', pageName)
+        // console.log('orderpage', tabName)
       } catch (error) {
         console.error(error)
       }
@@ -99,7 +99,6 @@ export const useOrderStore = defineStore('order', {
         console.error(error)
       }
     },
-
     async addOrderErp (orders) {
       function formatDateYYYYMMDD (dateStr) {
         const d = new Date(dateStr)
@@ -113,24 +112,34 @@ export const useOrderStore = defineStore('order', {
         const orderDate = formatDateYYYYMMDD(order.orderdate)
         const requestDate = formatDateYYYYMMDD(new Date())
 
-        const items = order.item.map(it => ({
-          discount: it.discount || 0,
-          itemCode: it.sku,
-          netPrice: it.pricepernumber,
-          price: it.pricepernumber,
-          promotionCode: '',
-          qty: it.number,
-          total: it.totalprice,
-          unit: it.unit
-        }))
+        const items = order.item.map(it => {
+          const qty = Number(it.number) || 0
+          const discount = Number(it.discount) || 0
 
-        const total = items.reduce((sum, i) => sum + i.total, 0)
+          const discountPerUnit =
+            qty > 0 ? Number((discount / qty).toFixed(2)) : 0
+
+          return {
+            discount: discountPerUnit,
+            itemCode: it.sku,
+            netPrice: it.pricepernumber,
+            price: it.pricepernumberOri,
+            promotionCode: it.procode,
+            qty,
+            total: it.totalprice,
+            unit: it.unit
+          }
+        })
+
+        const total = items
+          .filter(i => i.itemCode !== 'DISONLINE')
+          .reduce((sum, i) => sum + Number(i.total), 0)
 
         return {
           Hcase: 1,
           OAFRE1: 'YSEND',
           addressID: 'INVTSP',
-          customerNo: 'OLAZ000000',
+          customerNo: order.customercode,
           note: '',
           orderDate,
           orderNo: order.cono,
@@ -138,18 +147,19 @@ export const useOrderStore = defineStore('order', {
           orderStatusHigh: 22,
           orderStatusLow: 22,
           orderType: '071',
-          payer: 'OLAZ000000',
+          payer: order.customercode,
           ref: `${order.number}`,
           requestDate,
-          total,
-          totalNet: total,
-          warehouse: '107',
+          total: total,
+          totalNet: order.amount,
+          warehouse: '108',
           item: items
         }
       }
 
       try {
         const payload = orders.map(mapOrderToERP)
+        console.log('payload', payload)
         const response = await axios.post(
           import.meta.env.VITE_API_ERP_URL + '/erp/order/insert',
           payload

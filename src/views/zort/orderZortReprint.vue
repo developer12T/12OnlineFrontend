@@ -165,7 +165,7 @@ export default {
     const orders = ref([]);
 
     const tableColumns = computed(() => [
-      { id: "updatedatetime", title: "วันที่อัปเดต" },
+      { id: "updatedAt", title: "วันที่อัปเดต" },
       { id: "number", title: "หมายเลขออเดอร์" },
       { id: "id", title: "ID" },
       { id: "saleschannel", title: "ช่องทางขาย" },
@@ -277,6 +277,7 @@ export default {
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
+              "x-channel": "uat"
             },
             body: JSON.stringify({
               page: "reprint",
@@ -320,12 +321,17 @@ export default {
       // Filter by date range
       if (startDate.value || endDate.value) {
         filtered = filtered.filter((item) => {
-          const itemDate = new Date(item.updatedatetime);
-          const start = startDate.value ? new Date(startDate.value) : null;
-          const end = endDate.value ? new Date(endDate.value) : null;
+          const itemDate = new Date(item.updatedAt)
+          const start = startDate.value ? new Date(startDate.value) : null
+          const end = endDate.value ? new Date(endDate.value) : null
+
+
+          if (end) {
+            end.setHours(23, 59, 59, 999)
+          }
 
           if (start && end) {
-            return itemDate >= start && itemDate <= end;
+            return itemDate >= start && itemDate <= end
           } else if (start) {
             return itemDate >= start;
           } else if (end) {
@@ -382,7 +388,7 @@ export default {
     };
 
     const printCopy = async () => {
-      if (selected.value.length === 0) {
+      if (!selected.value.length) {
         Swal.fire({
           icon: "warning",
           title: "กรุณาเลือกรายการ",
@@ -391,63 +397,40 @@ export default {
         return;
       }
 
-      try {
-        Swal.fire({
-          icon: "info",
-          title: "กำลังพิมพ์สำเนา",
-          text: `กำลังพิมพ์ ${selected.value.length} ใบ...`,
-          showConfirmButton: false,
-          allowOutsideClick: false,
-        });
+      // 🔔 loading
+      Swal.fire({
+        icon: "info",
+        title: "กำลังเปิดหน้าพิมพ์",
+        text: `กำลังพิมพ์ ${selected.value.length} ใบ...`,
+        showConfirmButton: false,
+        allowOutsideClick: false,
+      });
 
-        // Debug: ดูค่าที่ได้
-        console.log("Selected value:", selected.value);
-        console.log("Selected type:", typeof selected.value);
-        console.log("Selected length:", selected.value.length);
+      const PRINT_API =
+        import.meta.env.VITE_API_BASE_URL + "/online/print/copy";
 
-        // สร้าง ID string ที่คั่นด้วย comma
-        const idString = selected.value.join(",");
-        console.log("ID String:", idString);
+      // สร้าง form ยิง POST ไปแท็บใหม่
+      const form = document.createElement("form");
+      form.method = "POST";
+      form.action = PRINT_API;
+      form.target = "_blank"; // ✅ เปิด new tab
 
-        // สร้าง URL สำหรับพิมพ์
-        // const printUrl = `http://58.181.206.156:8080/12Trading/zort_pdf/printReceiptOriginalSuccessERP.php?checklist=${idString}`;
+      const input = document.createElement("input");
+      input.type = "hidden";
+      input.name = "checklist";
+      input.value = JSON.stringify(selected.value);
 
-        const form = document.createElement("form");
-        form.method = "POST";
-        form.action =
-          "http://58.181.206.156:8080/12Trading/zort_pdf/printReceiptOriginalSuccessERP_copy.php";
-        form.target = "_blank"; // เปิดในแท็บใหม่
+      form.appendChild(input);
+      document.body.appendChild(form);
 
-        // console.log("Print URL:", printUrl);
-        const input = document.createElement("textarea");
-        input.name = "checklist";
-        input.value = idString;
-        form.appendChild(input);
+      // submit
+      form.submit();
+      document.body.removeChild(form);
 
-        // ✅ ส่งฟอร์ม
-        document.body.appendChild(form);
-        form.submit();
-        document.body.removeChild(form);
-
-        // เปิดหน้าต่างใหม่สำหรับพิมพ์
-        // window.open(printUrl, "_blank");
-
-        // รอสักครู่แล้วปิด loading
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-
-        Swal.fire({
-          icon: "success",
-          title: "เปิดหน้าพิมพ์แล้ว!",
-          text: `เปิดหน้าพิมพ์ ${selected.value.length} ใบเรียบร้อยแล้ว`,
-        });
-      } catch (error) {
-        console.error("Error during print:", error);
-        Swal.fire({
-          icon: "error",
-          title: "เกิดข้อผิดพลาด!",
-          text: "ไม่สามารถพิมพ์ได้",
-        });
-      }
+      // ปิด loading หลังยิงเสร็จ (ไม่ต้องรอ response)
+      setTimeout(() => {
+        Swal.close();
+      }, 500);
     };
 
     const printSummary = () => {
@@ -460,7 +443,7 @@ export default {
     };
 
     const printAll = async () => {
-      if (filteredItems.value.length === 0) {
+      if (!filteredItems.value.length) {
         Swal.fire({
           icon: "warning",
           title: "ไม่มีข้อมูล",
@@ -469,61 +452,49 @@ export default {
         return;
       }
 
-      try {
-        Swal.fire({
-          icon: "info",
-          title: "กำลังพิมพ์ทั้งหมด",
-          text: `กำลังพิมพ์ ${filteredItems.value.length} ใบ...`,
-          showConfirmButton: false,
-          allowOutsideClick: false,
-        });
+      // 🔔 loading
+      Swal.fire({
+        icon: "info",
+        title: "กำลังเปิดหน้าพิมพ์",
+        text: `กำลังพิมพ์ ${filteredItems.value.length} ใบ...`,
+        showConfirmButton: false,
+        allowOutsideClick: false,
+      });
 
-        // สร้าง ID string ที่คั่นด้วย comma จาก filteredItems
-        const idString = filteredItems.value.map((item) => item.id).join(",");
+      const PRINT_API =
+        import.meta.env.VITE_API_BASE_URL + "/online/print/copy";
 
-        // ✅ สร้าง form ชั่วคราวส่งแบบ POST ไปหน้า PDF
-        const form = document.createElement("form");
-        form.method = "POST";
-        form.action =
-          "http://58.181.206.156:8080/12Trading/zort_pdf/printReceiptOriginalSuccessERP.php";
-        form.target = "_blank"; // เปิดในแท็บใหม่
+      // สร้าง form ยิง POST ไปแท็บใหม่
+      const form = document.createElement("form");
+      form.method = "POST";
+      form.action = PRINT_API;
+      form.target = "_blank"; // ✅ new tab
 
-        const input = document.createElement("textarea");
-        textarea.name = "checklist";
-        textarea.value = idString;
-        form.appendChild(textarea);
+      const input = document.createElement("input");
+      input.type = "hidden";
+      input.name = "checklist";
+      input.value = JSON.stringify(filteredItems.value.map(item => item.id));// 🔥 ต่างจาก printCopy แค่นี้
 
-        // สร้าง URL สำหรับพิมพ์
-        // const printUrl = `http://58.181.206.156:8080/12Trading/zort_pdf/printReceiptOriginalSuccessERP.php?checklist=${idString}`;
+      form.appendChild(input);
+      document.body.appendChild(form);
 
-        // console.log("Print All URL:", printUrl);
+      // submit
+      form.submit();
+      document.body.removeChild(form);
 
-        // เปิดหน้าต่างใหม่สำหรับพิมพ์
-        // window.open(printUrl, "_blank");
-        const textarea = document.createElement("textarea");
-        textarea.name = "checklist";
-        textarea.value = idString;
-        form.appendChild(textarea);
-
-        document.body.appendChild(form);
-
-        // รอสักครู่แล้วปิด loading
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-
-        Swal.fire({
-          icon: "success",
-          title: "เปิดหน้าพิมพ์แล้ว!",
-          text: `เปิดหน้าพิมพ์ทั้งหมด ${filteredItems.value.length} ใบเรียบร้อยแล้ว`,
-        });
-      } catch (error) {
-        console.error("Error during print all:", error);
-        Swal.fire({
-          icon: "error",
-          title: "เกิดข้อผิดพลาด!",
-          text: "ไม่สามารถพิมพ์ได้",
-        });
-      }
+      // ปิด loading
+      setTimeout(() => {
+        Swal.close();
+      }, 500);
     };
+
+
+    function formatLocalDate(date) {
+      const y = date.getFullYear()
+      const m = String(date.getMonth() + 1).padStart(2, "0")
+      const d = String(date.getDate()).padStart(2, "0")
+      return `${y}-${m}-${d}`
+    }
 
     onMounted(async () => {
       try {
@@ -538,15 +509,21 @@ export default {
           endDate.value = savedEndDate;
         } else {
           // Set default date range to current day if no saved values
-          const now = new Date();
-          const today = now.toISOString().split("T")[0];
+          const now = new Date()
 
-          startDate.value = today;
-          endDate.value = today;
+          // 🔥 วันแรกของเดือน
+          const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
+          const start = firstDayOfMonth.toISOString().split("T")[0]
 
-          // Save default values
-          localStorage.setItem("reprintStartDate", today);
-          localStorage.setItem("reprintEndDate", today);
+          // 🔥 วันนี้
+          const end = now.toISOString().split("T")[0]
+
+          startDate.value = formatLocalDate(firstDayOfMonth)
+          endDate.value = formatLocalDate(now)
+
+
+          localStorage.setItem("reprintStartDate", start)
+          localStorage.setItem("reprintEndDate", end)
         }
 
         // โหลดข้อมูลจาก localStorage ก่อน

@@ -257,6 +257,8 @@ export default {
           allowOutsideClick: false
         })
 
+        console.log(filteredItems.value)
+
         // ✅ ต้องให้ store.addOrderErp return response.data
         const erpRes = await store.addOrderErp(filteredItems.value)
 
@@ -327,7 +329,7 @@ export default {
         })
 
         // ถ้าต้องการ refresh หลังทำเสร็จ
-        await afterAdded()
+        // await afterAdded()
 
       } catch (error) {
         console.log(error)
