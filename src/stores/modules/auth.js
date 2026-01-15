@@ -22,7 +22,7 @@ export const useAuthStore = defineStore("auth", {
     async login(userLogin, passwordLogin) {
       try {
         const response = await axios.post(
-          import.meta.env.VITE_API_BASE_URL + "/12Trading/authen",
+          import.meta.env.VITE_API_BASE_URL + "/12lmsapi/api/auth/login",
           // 'http://192.168.2.97:8383' + "/12Trading/authen",
           { username: userLogin, password: passwordLogin },
           {
