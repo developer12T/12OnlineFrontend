@@ -28,7 +28,8 @@
         <ul class="space-y-1">
           <!-- Dashboard -->
           <li>
-            <a href="/onlineManage/dashboard" @click="isCollapsed ? showPopup($event, 'dashboard') : null"
+            <router-link :to="isCollapsed ? undefined : '/onlineManage/dashboard'"
+              @click.prevent="isCollapsed ? showPopup($event, 'dashboard') : null"
               class="flex items-center p-3 text-white rounded-lg hover:bg-sky-600 transition-all duration-200 ease-in-out group transform hover:scale-105">
               <svg v-if="!isCollapsed"
                 class="w-5 h-5 text-gray-300 group-hover:text-white transition-all duration-200 ease-in-out"
@@ -51,7 +52,7 @@
                   <path
                     d="M12.5 0c-.157 0-.311.01-.565.027A1 1 0 0 0 11 1.02V10h8.975a1 1 0 0 0 1-.935c.013-.188.028-.374.028-.565A8.51 8.51 0 0 0 12.5 0Z" />
                 </svg><span class="text-[10px]">หน้าแรก</span></span>
-            </a>
+            </router-link>
           </li>
 
           <!-- Orders Dropdown -->
@@ -82,28 +83,22 @@
               class="ml-4 border-l border-sky-800 space-y-1 transition-all duration-500 ease-in-out transform"
               :class="orderMenuOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'">
               <li>
-                <a href="/onlineManage/order/reciept" @click="setPage('receipt')"
+                <router-link to="/onlineManage/order/reciept" @click="setPage('receipt')"
                   class="flex items-center w-full p-2 text-gray-200 hover:text-white hover:bg-sky-600 transition-all duration-200 ease-in-out rounded text-sm transform hover:scale-105">
                   <span class="ml-4">พิมพ์ใบเสร็จ</span>
-                </a>
+                </router-link>
               </li>
               <li>
-                <a href="/onlineManage/order/erp" @click="setPage('preparem3')"
+                <router-link to="/onlineManage/order/erp" @click="setPage('preparem3')"
                   class="flex items-center w-full p-2 text-gray-200 hover:text-white hover:bg-sky-600 transition-all duration-200 ease-in-out rounded text-sm transform hover:scale-105">
                   <span class="ml-4">รอนำเข้า ERP</span>
-                </a>
+                </router-link>
               </li>
-              <!-- <li>
-                <a href="/onlineManage/order/history" @click="setPage('history')"
-                  class="flex items-center w-full p-2 text-gray-200 hover:text-white hover:bg-sky-600 transition-all duration-200 ease-in-out rounded text-sm transform hover:scale-105">
-                  <span class="ml-4">ประวัติ</span>
-                </a>
-              </li> -->
               <li>
-                <a href="/onlineManage/order/reprint" @click="setPage('reprint')"
+                <router-link to="/onlineManage/order/reprint" @click="setPage('reprint')"
                   class="flex items-center w-full p-2 text-gray-200 hover:text-white hover:bg-sky-600 transition-all duration-200 ease-in-out rounded text-sm transform hover:scale-105">
                   <span class="ml-4">รีปริ้นส์</span>
-                </a>
+                </router-link>
               </li>
             </ul>
           </li>
@@ -310,11 +305,11 @@
         </button>
       </div>
     </div>
-
+    
     <div class="p-2">
       <!-- Dashboard Menu -->
       <div v-if="activePopup === 'dashboard'">
-        <a href="/onlineManage/dashboard"
+        <router-link to="/onlineManage/dashboard"
           class="block px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-sky-600 rounded transition-all duration-200 ease-in-out transform hover:scale-105">
           <div class="flex items-center space-x-2">
             <svg class="w-4 h-4 transition-all duration-200 ease-in-out" fill="currentColor" viewBox="0 0 22 21">
@@ -325,12 +320,13 @@
             </svg>
             <span class="transition-all duration-200 ease-in-out">หน้าแรก</span>
           </div>
-        </a>
+        </router-link>
       </div>
 
       <!-- Orders Menu -->
       <div v-if="activePopup === 'orders'">
-        <a href="/onlineManage/order/reciept" @click="setPage('receipt'); hidePopup()"
+        <!-- พิมพ์ใบเสร็จ -->
+        <router-link to="/onlineManage/order/reciept" @click="setPage('receipt'); hidePopup()"
           class="block px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-sky-600 rounded transition-all duration-200 ease-in-out transform hover:scale-105">
           <div class="flex items-center space-x-2">
             <svg class="w-4 h-4 transition-all duration-200 ease-in-out" fill="currentColor" viewBox="0 0 20 20">
@@ -341,8 +337,10 @@
             </svg>
             <span class="transition-all duration-200 ease-in-out">พิมพ์ใบเสร็จ</span>
           </div>
-        </a>
-        <a href="/onlineManage/order/erp" @click="setPage('preparem3'); hidePopup()"
+        </router-link>
+
+        <!-- รอนำเข้า ERP -->
+        <router-link to="/onlineManage/order/erp" @click="setPage('preparem3'); hidePopup()"
           class="block px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-sky-600 rounded transition-all duration-200 ease-in-out transform hover:scale-105">
           <div class="flex items-center space-x-2">
             <svg class="w-4 h-4 transition-all duration-200 ease-in-out" fill="currentColor" viewBox="0 0 20 20">
@@ -352,31 +350,24 @@
             </svg>
             <span class="transition-all duration-200 ease-in-out">รอนำเข้า ERP</span>
           </div>
-        </a>
-        <!-- <a href="/onlineManage/order/history" @click="setPage('history'); hidePopup()"
+        </router-link>
+
+        <!-- พิมพ์ใบเสร็จย้อนหลัง -->
+        <router-link to="/onlineManage/order/reprint" @click="setPage('summary'); hidePopup()"
           class="block px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-sky-600 rounded transition-all duration-200 ease-in-out transform hover:scale-105">
           <div class="flex items-center space-x-2">
-            <svg class="w-4 h-4 transition-all duration-200 ease-in-out" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd"
-                d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
-                clip-rule="evenodd" />
-            </svg>
-            <span class="transition-all duration-200 ease-in-out">ประวัติ</span>
-          </div>
-        </a> -->
-        <a href="/onlineManage/order/reprint" @click="setPage('summary'); hidePopup()"
-          class="block px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-sky-600 rounded transition-all duration-200 ease-in-out transform hover:scale-105">
-          <div class="flex items-center space-x-2">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 transition-all duration-200 ease-in-out" width="64" height="64" viewBox="0 0 50 50">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 transition-all duration-200 ease-in-out"
+              viewBox="0 0 50 50">
               <path fill="currentColor"
                 d="M25 38c-7.2 0-13-5.8-13-13s5.8-13 13-13c5.4 0 10.1 3.4 11.9 8.7l-1.9.7c-1.5-4.6-5.4-7.4-10-7.4c-6.1 0-11 4.9-11 11s4.9 11 11 11c4.3 0 8.2-2.5 10-6.4l1.8.8C34.7 35 30.1 38 25 38" />
               <path fill="currentColor" d="M38 22h-8v-2h6v-6h2z" />
             </svg>
             <span class="transition-all duration-200 ease-in-out">พิมพ์ใบเสร็จย้อนหลัง</span>
           </div>
-        </a>
+        </router-link>
       </div>
     </div>
+
   </div>
 
   <!-- Overlay to close popup when clicking outside -->

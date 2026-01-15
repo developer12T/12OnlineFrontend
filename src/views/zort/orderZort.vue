@@ -506,7 +506,11 @@ export default {
       );
       console.log("print", selectedOrders);
       localStorage.setItem("summaryData", JSON.stringify(selectedOrders));
-      window.open("/onlineManage/order/summary", "_blank");
+      // window.open("/onlineManage/order/summary", "_blank");
+      window.open(
+        import.meta.env.BASE_URL + 'onlineManage/order/summary',
+        '_blank'
+      );
     };
 
     const tabs = ref("wait-tab");
