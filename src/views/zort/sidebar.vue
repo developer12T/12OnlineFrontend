@@ -28,32 +28,33 @@
         <ul class="space-y-1">
           <!-- Dashboard -->
           <li>
-            <router-link :to="isCollapsed ? undefined : '/onlineManage/dashboard'"
-              @click.prevent="isCollapsed ? showPopup($event, 'dashboard') : null"
-              class="flex items-center p-3 text-white rounded-lg hover:bg-sky-600 transition-all duration-200 ease-in-out group transform hover:scale-105">
-              <svg v-if="!isCollapsed"
-                class="w-5 h-5 text-gray-300 group-hover:text-white transition-all duration-200 ease-in-out"
-                fill="currentColor" viewBox="0 0 22 21">
+            <!-- collapsed: เปิด popup อย่างเดียว -->
+            <div v-if="isCollapsed" @click="showPopup($event, 'dashboard')"
+              class="flex items-center p-3 text-white rounded-lg hover:bg-sky-600 cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105">
+              <div class="flex flex-col items-center">
+                <svg class="w-5 h-5 text-gray-300 group-hover:text-white" fill="currentColor" viewBox="0 0 22 21">
+                  <path
+                    d="M16.975 11H10V4.025a1 1 0 0 0-1.066-.998 8.5 8.5 0 1 0 9.039 9.039.999.999 0 0 0-1-1.066h.002Z" />
+                  <path
+                    d="M12.5 0c-.157 0-.311.01-.565.027A1 1 0 0 0 11 1.02V10h8.975a1 1 0 0 0 1-.935c.013-.188.028-.374.028-.565A8.51 8.51 0 0 0 12.5 0Z" />
+                </svg>
+                <span class="text-[10px] mt-1">หน้าแรก</span>
+              </div>
+            </div>
+
+            <!-- expanded: router-link ปกติ -->
+            <router-link v-else to="/onlineManage/dashboard"
+              class="flex items-center p-3 text-white rounded-lg hover:bg-sky-600 transition-all duration-200 ease-in-out transform hover:scale-105">
+              <svg class="w-5 h-5 text-gray-300 group-hover:text-white" fill="currentColor" viewBox="0 0 22 21">
                 <path
                   d="M16.975 11H10V4.025a1 1 0 0 0-1.066-.998 8.5 8.5 0 1 0 9.039 9.039.999.999 0 0 0-1-1.066h.002Z" />
                 <path
                   d="M12.5 0c-.157 0-.311.01-.565.027A1 1 0 0 0 11 1.02V10h8.975a1 1 0 0 0 1-.935c.013-.188.028-.374.028-.565A8.51 8.51 0 0 0 12.5 0Z" />
               </svg>
-              <span v-if="!isCollapsed"
-                class="ml-3 text-sm font-medium transition-all duration-500 ease-in-out transform"
-                :class="isCollapsed ? 'opacity-0 -translate-x-4' : 'opacity-100 translate-x-0'">หน้าแรก</span>
-              <span v-else
-                class="text-xs text-center flex items-center flex-col transition-all duration-500 ease-in-out transform"
-                :class="isCollapsed ? 'opacity-100 scale-100' : 'opacity-0 scale-95'"> <svg
-                  class="w-5 h-5 text-gray-300 group-hover:text-white transition-all duration-200 ease-in-out"
-                  fill="currentColor" viewBox="0 0 22 21">
-                  <path
-                    d="M16.975 11H10V4.025a1 1 0 0 0-1.066-.998 8.5 8.5 0 1 0 9.039 9.039.999.999 0 0 0-1-1.066h.002Z" />
-                  <path
-                    d="M12.5 0c-.157 0-.311.01-.565.027A1 1 0 0 0 11 1.02V10h8.975a1 1 0 0 0 1-.935c.013-.188.028-.374.028-.565A8.51 8.51 0 0 0 12.5 0Z" />
-                </svg><span class="text-[10px]">หน้าแรก</span></span>
+              <span class="ml-3 text-sm font-medium">หน้าแรก</span>
             </router-link>
           </li>
+
 
           <!-- Orders Dropdown -->
           <li>
@@ -305,7 +306,7 @@
         </button>
       </div>
     </div>
-    
+
     <div class="p-2">
       <!-- Dashboard Menu -->
       <div v-if="activePopup === 'dashboard'">
