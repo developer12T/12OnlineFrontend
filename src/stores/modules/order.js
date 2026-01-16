@@ -31,7 +31,7 @@ export const useOrderStore = defineStore('order', {
         const pageName = localStorage.getItem('orderPage')
         const tabName = this.tabName
         const reponse = await axios.post(
-          import.meta.env.VIT_EAPI_BASE_URL + '/online/api/order/all',
+          import.meta.env.VITE_API_BASE_URL + '/online/api/order/all',
           {
             page: pageName,
             tab: tabName

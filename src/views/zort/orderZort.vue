@@ -118,7 +118,7 @@
                 tabs !== 'success-tab',
             }">พิมพ์สำเร็จ</a>
           </li>
-
+<!-- 
              <li class="mr-2">
             <a href="#" @click="handleTabs('success-tab')" :class="{
               'inline-block p-3 text-[#0369A1] border-b-2 border-[#0369A1] rounded-t-lg  dark:text-[#0369A1] dark:border-[#0369A1]':
@@ -126,7 +126,7 @@
               'inline-block p-3 border-b-2 border-transparent rounded-t-lg hover:text-[#0369A1]/60 hover:border-[#0369A1]/60 dark:hover:text-gray-300':
                 tabs !== 'success-tab',
             }">Order ที่ยกเลิก</a>
-          </li>
+          </li> -->
 
           <!-- <li class="mr-2">
             <a href="#" @click="handleTabs('payment-tab')" :class="{
