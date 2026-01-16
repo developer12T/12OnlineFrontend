@@ -138,7 +138,7 @@ export const useOrderStore = defineStore('order', {
         return {
           Hcase: 1,
           OAFRE1: 'YSEND',
-          addressID: 'INVTSP',
+          addressID: 'SHIP1',
           customerNo: order.customercode,
           note: '',
           orderDate,
