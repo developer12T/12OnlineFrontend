@@ -44,9 +44,9 @@ export const useOrderStore = defineStore('order', {
         )
         const result = reponse.data
         this.zortOrder = result
-        // localStorage.setItem('zortOrder', JSON.stringify(result));
-        // console.log('orderzort', this.zortOrder)
-        // console.log('orderpage', pageName)
+        localStorage.setItem('zortOrder', JSON.stringify(result));
+        console.log('orderzort', this.zortOrder)
+        console.log('orderpage', pageName)
         // console.log('orderpage', tabName)
       } catch (error) {
         console.error(error)
