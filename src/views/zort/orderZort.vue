@@ -13,7 +13,7 @@
         </div>
       </div>
       <div class="flex items-center rounded-lg p-2" v-if="this.tabs === 'wait-tab' || this.tabs === 'payment-tab'">
-        <button @click="showPrintIframe()"
+        <button @click="printOriginal()"
           class="bg-[#4CAF50] flex items-center hover:bg-green-600 text-white border border-green-500 hover:border-green-600 focus:ring-4 focus:outline-none focus:ring-green-300 gap-2 font-medium rounded-md text-sm px-5 py-2 text-center mb-2 sm:mb-0 dark:bg-green-600 dark:text-green-500 dark:hover:text-white dark:hover:bg-green-700 dark:focus:ring-green-800 mr-1"
           :class="{ 'pointer-events-none': !isItemSelected }">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 48 48">
@@ -31,7 +31,7 @@
           พิมพ์ต้นฉบับ
           {{ selected.length > 0 ? selected.length + " ใบ" : "" }}
         </button>
-        <button @click="showPrintIframeAndCopy()"
+        <button @click="printOriginalAndCopy()"
           class="bg-[#4CAF50] flex items-center hover:bg-green-600 text-white border border-green-500 hover:border-green-600 focus:ring-4 focus:outline-none focus:ring-green-300 gap-2 font-medium rounded-md text-sm px-5 py-2 text-center mb-2 sm:mb-0 dark:bg-green-600 dark:text-green-500 dark:hover:text-white dark:hover:bg-green-700 dark:focus:ring-green-800 mr-1"
           :class="{ 'pointer-events-none': !isItemSelected }">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 48 48">
@@ -61,7 +61,7 @@
         </button>
       </div>
       <div class="flex items-center rounded-lg p-2" v-else-if="this.tabs === 'success-tab'">
-        <button @click="showPrintIframeAndCopy()"
+        <button @click="printOriginalAndCopy()"
           class="bg-[#4CAF50] flex items-center hover:bg-green-600 text-white border border-green-500 hover:border-green-600 focus:ring-4 focus:outline-none focus:ring-green-300 gap-2 font-medium rounded-md text-sm px-5 py-2 text-center mb-2 sm:mb-0 dark:bg-green-600 dark:text-green-500 dark:hover:text-white dark:hover:bg-green-700 dark:focus:ring-green-800 mr-1"
           :class="{ 'pointer-events-none': !isItemSelected }">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 48 48">
@@ -79,7 +79,7 @@
           พิมพ์ต้นฉบับและสำเนา
           {{ selected.length > 0 ? selected.length + " ใบ" : "" }}
         </button>
-        <button @click="showPrintIframeCopy()"
+        <button @click="printCopy()"
           class="bg-[#007BFF] shadow-md flex items-center hover:bg-green-600 text-white border border-[#007BFF] hover:border-green-600 focus:ring-4 focus:outline-none focus:ring-green-300 gap-2 font-medium rounded-md text-sm px-5 py-2 text-center mb-2 sm:mb-0 dark:bg-green-600 dark:text-green-500 dark:hover:text-white dark:hover:bg-green-700 dark:focus:ring-green-800 sm:ml-4"
           :class="{ 'pointer-events-none': !isItemSelected }">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 48 48">
@@ -95,6 +95,15 @@
             <path fill="#1976d2" d="M16 33h17v2H16zm0 4h13v2H16z" />
           </svg>
           พิมพ์สำเนา
+          {{ selected.length > 0 ? selected.length + " ใบ" : "" }}
+        </button>
+
+        <button @click="printDeliveyMackro()"
+          class="bg-[#007BFF] shadow-md flex items-center hover:bg-green-600 text-white border border-[#007BFF] hover:border-green-600 focus:ring-4 focus:outline-none focus:ring-green-300 gap-2 font-medium rounded-md text-sm px-5 py-2 text-center mb-2 sm:mb-0 dark:bg-green-600 dark:text-green-500 dark:hover:text-white dark:hover:bg-green-700 dark:focus:ring-green-800 sm:ml-4"
+          :class="{ 'pointer-events-none': !isItemSelected }">
+          <img src="/makro.png" width="25" class="mr-1" />
+
+          Delivery Mackro
           {{ selected.length > 0 ? selected.length + " ใบ" : "" }}
         </button>
       </div>
@@ -118,24 +127,15 @@
                 tabs !== 'success-tab',
             }">พิมพ์สำเร็จ</a>
           </li>
-<!-- 
-             <li class="mr-2">
-            <a href="#" @click="handleTabs('success-tab')" :class="{
-              'inline-block p-3 text-[#0369A1] border-b-2 border-[#0369A1] rounded-t-lg  dark:text-[#0369A1] dark:border-[#0369A1]':
-                tabs === 'success-tab',
-              'inline-block p-3 border-b-2 border-transparent rounded-t-lg hover:text-[#0369A1]/60 hover:border-[#0369A1]/60 dark:hover:text-gray-300':
-                tabs !== 'success-tab',
-            }">Order ที่ยกเลิก</a>
-          </li> -->
 
-          <!-- <li class="mr-2">
-            <a href="#" @click="handleTabs('payment-tab')" :class="{
+          <li class="mr-2">
+            <a href="#" @click="handleTabs('cancelled-tab')" :class="{
               'inline-block p-3 text-[#0369A1] border-b-2 border-[#0369A1] rounded-t-lg  dark:text-[#0369A1] dark:border-[#0369A1]':
-                tabs === 'payment-tab',
+                tabs === 'cancelled-tab',
               'inline-block p-3 border-b-2 border-transparent rounded-t-lg hover:text-[#0369A1]/60 hover:border-[#0369A1]/60 dark:hover:text-gray-300':
-                tabs !== 'payment-tab',
-            }">รอชำระ</a>
-          </li> -->
+                tabs !== 'cancelled-tab',
+            }">Order ที่ยกเลิก</a>
+          </li>
         </ul>
       </div>
       <!-- Print Iframe Modal -->
@@ -159,11 +159,17 @@
       </div>
 
       <div v-if="tabs === 'success-tab'">
-        <div class="flex justify-center mt-0 overflow-y-scroll shadow-md sm:rounded-lg"
-          style="height: calc(100vh - 165px)">
+        <div class="flex justify-center mt-0 overflow-y-scroll shadow-md sm:rounded-lg custom-scrollbar"
+          style="height: 500px">
           <table class="w-full bg-white text-sm text-left rounded-lg text-gray-500 dark:text-gray-400">
             <TableOrder :columns="tableSuccess" :data="filteredItems" :selected="selected" :isLoading="isLoading"
               @update:selected="onSelectedUpdate">
+              <template v-slot:createdatetime="{ row }">
+                {{ formatDateTime(row.createdatetime) }}
+              </template>
+              <template v-slot:printdatetime="{ row }">
+                {{ formatDateTime(row.printdatetime) }}
+              </template>
               <template v-slot:number="{ row }">
                 <div class="flex items-center justify-center">
                   <span>
@@ -216,7 +222,7 @@
           </table>
         </div>
       </div>
-      <div v-else>
+      <div v-else-if="tabs === 'wait-tab'">
         <div class="flex justify-center mt-0 overflow-y-scroll shadow-md sm:rounded-lg custom-scrollbar"
           style="height: 500px">
           <table class="w-full bg-white text-sm text-left rounded-lg text-gray-500 dark:text-gray-400">
@@ -294,241 +300,107 @@
           </table>
         </div>
       </div>
+      <div v-else-if="tabs === 'cancelled-tab'">
+        <div class="flex justify-center mt-0 overflow-y-scroll shadow-md sm:rounded-lg custom-scrollbar"
+          style="height: 500px">
+          <table class="w-full bg-white text-sm text-left rounded-lg text-gray-500 dark:text-gray-400">
+            <TableOrder :columns="tableSuccessCancelled" :data="filteredItems" :selected="selected"
+              :isLoading="isLoading" @update:selected="onSelectedUpdate">
+              <template v-slot:createdatetime="{ row }">
+                {{ formatDateTime(row.createdatetime) }}
+              </template>
+              <template v-slot:printdatetime="{ row }">
+                {{ formatDateTime(row.printdatetime) }}
+              </template>
+              <template v-slot:number="{ row }">
+                <div class="flex items-center justify-center">
+                  <span>
+                    {{ row.number }}
+
+                    <div v-if="row.invstatus !== ''"
+                      class="text-blue-800 text-xs font-medium ml-0 px-1 py-0.5 rounded-full dark:text-blue-300">
+                      <svg class="w-3 h-3 text-gray-800 dark:text-white mr-1 inline-flex" aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 19 18">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M13.583 5.445h.01M8.86 16.71l-6.573-6.63a.993.993 0 0 1 0-1.4l7.329-7.394A.98.98 0 0 1 10.31 1l5.734.007A1.968 1.968 0 0 1 18 2.983v5.5a.994.994 0 0 1-.316.727l-7.439 7.5a.975.975 0 0 1-1.385.001Z" />
+                      </svg>
+                      {{ row.invstatus }}
+                    </div>
+                  </span>
+                </div>
+              </template>
+              <template v-slot:status="{ row }">
+                <div class="flex items-center justify-center" v-if="row.statusText !== 'พบข้อผิดพลาด'">
+                  <span v-if="row.status === 'Success'"
+                    class="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">
+                    {{ row.statusText }}
+                  </span>
+                  <span v-if="row.status === 'Pending'"
+                    class="bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-300">
+                    {{ row.statusText }}
+                  </span>
+                  <span v-if="row.status === 'Cancelled'"
+                    class="bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300">
+                    {{ row.statusText }}
+                  </span>
+                  <span v-if="row.status === 'Shipped'"
+                    class="bg-yellow-100 text-yellow-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-yellow-900 dark:text-yellow-300">
+                    {{ row.statusText }}
+                  </span>
+                </div>
+                <div class="flex items-center justify-center" v-else>-</div>
+              </template>
+              <template v-slot:saleschannel="{ row }">
+                <div class="flex items-center justify-center">
+                  <img v-if="row.saleschannel === 'Shopee'" src="/shopee-icon.png" width="25" class="mr-1" />
+                  <img v-if="row.saleschannel === 'Makro'" src="/makro.png" width="25" class="mr-1" />
+                  <img v-else-if="row.saleschannel === 'Lazada'" src="/lazada-icon.png" width="25" class="mr-1" />
+                  <img v-else-if="row.saleschannel === 'TIKTOK'" src="/tiktok.png" width="25" class="mr-1" />
+                  <img v-else-if="row.saleschannel === 'Amaze'" src="/amaze.png" width="25" class="mr-1" />
+                  <span :title="row.saleschannel"></span>
+                </div>
+              </template>
+            </TableOrder>
+          </table>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
+
 <script>
-import {
-  onMounted, computed, ref, watch, nextTick
-} from "vue";
+import { onMounted, computed, ref, watch, nextTick } from "vue";
 import { useAuthStore, useOrderStore, useUtilityStore } from "../../stores";
 import Swal from "sweetalert2";
 import router from "../../router";
 import CountOrder from "./orderCount.vue";
 import SearchOrder from "../../components/searchbar.vue";
 import TableOrder from "../../components/tableCheckbox.vue";
-
-
-
+import axios from "axios";
 
 export default {
-  components: {
-    CountOrder,
-    SearchOrder,
-    TableOrder,
-  },
+  components: { CountOrder, SearchOrder, TableOrder },
+
   setup() {
+    /* ===============================
+     AUTH / SIDEBAR
+    ============================== */
     const authStore = useAuthStore();
+    if (!authStore.user) router.push("/");
+
     const isCollapsed = ref(true);
-    if (!authStore.user) {
-      router.push("/");
-    }
 
-    const tableColumns = computed(() => {
-      return [
-        { id: "createdatetime", title: "วันที่ออเดอร์" },
-        { id: "printdatetime", title: "วันที่พิมพ์" },
-        { id: "number", title: "รายการ" },
-        { id: "customer", title: "ลูกค้า" },
-        { id: "amount", title: "มูลค่า" },
-        { id: "status", title: "สถานะ" },
-        { id: "paymentstatus", title: "ชำระเงิน" },
-        { id: "saleschannel", title: "ช่องทาง" },
-        { id: "totalprint", title: "printcount" },
-      ];
-    });
+    const checkSidebarState = () => {
+      isCollapsed.value = !!document.querySelector('[class*="w-18"]');
+    };
 
-    const tableSuccess = computed(() => {
-      return [
-        { id: "createdatetime", title: "วันที่ออเดอร์" },
-        { id: "printdatetime", title: "วันที่พิมพ์" },
-        { id: "number", title: "รายการ" },
-        { id: "cono", title: "co" },
-        { id: "invno", title: "inv" },
-        { id: "customer", title: "ลูกค้า" },
-        { id: "amount", title: "มูลค่า" },
-        { id: "status", title: "สถานะ" },
-        { id: "saleschannel", title: "ช่องทาง" },
-        { id: "totalprint", title: "printcount" },
-      ];
-    });
-
+    /* ===============================
+     STORE & DATA
+    ============================== */
     const store = useOrderStore();
-
-    const orders = computed(() => {
-      return store.zortOrder;
-    });
-
+    const orders = computed(() => store.zortOrder);
     const isLoading = ref(true);
-    const showIframe = ref(false);
-    const iframeSrc = ref("");
-
-    const showPrintIframe = async () => {
-      if (selected.value.length === 0) return;
-
-      // 1️⃣ เปิด modal ก่อน
-      showIframe.value = true;
-
-      // 2️⃣ รอให้ iframe ถูก render ลง DOM
-      await nextTick();
-
-      const PRINT_API =
-        import.meta.env.VITE_API_BASE_URL + "/online/print/original";
-
-      const form = document.createElement("form");
-      form.method = "POST";
-      form.action = PRINT_API;
-      form.target = "printIframe";
-
-      const input = document.createElement("input");
-      input.type = "hidden";
-      input.name = "checklist";
-      input.value = JSON.stringify(selected.value);
-
-      form.appendChild(input);
-      document.body.appendChild(form);
-
-      // 3️⃣ submit หลัง iframe มีจริงแล้ว
-      form.submit();
-      document.body.removeChild(form);
-    };
-
-    const showPrintIframeAndCopy = async () => {
-      if (selected.value.length === 0) return;
-
-      // 1️⃣ เปิด modal ก่อน
-      showIframe.value = true;
-
-      // 2️⃣ รอให้ iframe ถูก render ลง DOM
-      await nextTick();
-
-      const PRINT_API =
-        import.meta.env.VITE_API_BASE_URL + "/online/print/originalandcopy";
-
-      const form = document.createElement("form");
-      form.method = "POST";
-      form.action = PRINT_API;
-      form.target = "printIframe";
-
-      const input = document.createElement("input");
-      input.type = "hidden";
-      input.name = "checklist";
-      input.value = JSON.stringify(selected.value);
-
-      form.appendChild(input);
-      document.body.appendChild(form);
-
-      // 3️⃣ submit หลัง iframe มีจริงแล้ว
-      form.submit();
-      document.body.removeChild(form);
-    };
-
-
-
-    const showPrintIframeCopy = async () => {
-      if (selected.value.length === 0) return;
-
-      // 1️⃣ เปิด modal ก่อน
-      showIframe.value = true;
-
-      // 2️⃣ รอให้ iframe ถูก render ลง DOM
-      await nextTick();
-
-      const PRINT_API =
-        import.meta.env.VITE_API_BASE_URL + "/online/print/copy";
-
-      const form = document.createElement("form");
-      form.method = "POST";
-      form.action = PRINT_API;
-      form.target = "printIframe";
-
-      const input = document.createElement("input");
-      input.type = "hidden";
-      input.name = "checklist";
-      input.value = JSON.stringify(selected.value);
-
-      form.appendChild(input);
-      document.body.appendChild(form);
-
-      // 3️⃣ submit หลัง iframe มีจริงแล้ว
-      form.submit();
-      document.body.removeChild(form);
-    };
-
-    const closeIframe = () => {
-      showIframe.value = false;
-      iframeSrc.value = "";
-    };
-
-    const printReceipt = async () => {
-      try {
-        Swal.fire({
-          icon: "info",
-          title: "กำลังพิมพ์",
-          text: "กรุณารอสักครู่...",
-          showConfirmButton: false,
-          allowOutsideClick: false,
-        });
-        await store.getOrderZort();
-        await afterPrint();
-        Swal.fire({
-          icon: "success",
-          title: "สำเร็จ!",
-          text: "พิมพ์สำเร็จ",
-        });
-      } catch (error) {
-        Swal.hideLoading();
-        Swal.fire({
-          icon: "error",
-          title: "เกิดข้อผิดพลาด!",
-          text: "ไม่สามารถพิมพ์ได้",
-        });
-      }
-    };
-
-    const selected = ref([]);
-    const isItemSelected = ref(false);
-    // const onSelectedUpdate = (newValue) => {
-    //   selected.value = newValue;
-    //   isItemSelected.value = selected.value.length > 0;
-    // };
-
-    const onSelectedUpdate = (newValue) => {
-      selected.value = newValue;
-      isItemSelected.value = selected.value.length > 0;
-
-      if (selected.value.length === 0) {
-        localStorage.removeItem("summaryData");
-        console.log("LocalStorage cleared");
-      } else {
-        const selectedOrders = orders.value.filter((order) =>
-          selected.value.includes(order.id)
-        );
-        localStorage.setItem("summaryData", JSON.stringify(selectedOrders));
-        console.log("Updated LocalStorage with selected orders:", selectedOrders);
-      }
-    };
-    const printSummary = () => {
-      const selectedOrders = orders.value.filter((order) =>
-        selected.value.includes(order.id)
-      );
-      console.log("print", selectedOrders);
-      localStorage.setItem("summaryData", JSON.stringify(selectedOrders));
-      // window.open("/onlineManage/order/summary", "_blank");
-      window.open(
-        import.meta.env.BASE_URL + 'onlineManage/order/summary',
-        '_blank'
-      );
-    };
-
-    const tabs = ref("wait-tab");
-    const handleTabs = async (tabName) => {
-      tabs.value = tabName;
-      await store.setTab(tabs.value);
-      await clearCheckbox();
-      await loadTabData();
-    };
 
     const loadTabData = async () => {
       isLoading.value = true;
@@ -536,74 +408,222 @@ export default {
       isLoading.value = false;
     };
 
-    const afterPrint = async () => {
-      isLoading.value = true;
-      await store.getOrderZort();
-      await handleTabs("success-tab");
-      isLoading.value = false;
+    /* ===============================
+     TABLE CONFIG
+    ============================== */
+    const baseColumns = [
+      { id: "createdatetime", title: "วันที่ออเดอร์" },
+      { id: "printdatetime", title: "วันที่พิมพ์" },
+      { id: "number", title: "รายการ" },
+      { id: "customer", title: "ลูกค้า" },
+      { id: "amount", title: "มูลค่า" },
+      { id: "status", title: "สถานะ" },
+      { id: "saleschannel", title: "ช่องทาง" },
+      { id: "totalprint", title: "printcount" },
+    ];
+
+    const baseColumns2 = [
+      { id: "number", title: "รายการ" },
+      { id: "customer", title: "ลูกค้า" },
+      { id: "amount", title: "มูลค่า" },
+      { id: "status", title: "สถานะ" },
+      { id: "saleschannel", title: "ช่องทาง" },
+      { id: "totalprint", title: "printcount" },
+    ];
+
+
+    const tableColumns = computed(() => [
+      ...baseColumns.slice(0, 6),
+      { id: "paymentstatus", title: "ชำระเงิน" },
+      ...baseColumns.slice(6),
+    ]);
+
+    const tableSuccess = computed(() => [
+      ...baseColumns.slice(0, 3),
+      { id: "cono", title: "co" },
+      { id: "invno", title: "inv" },
+      ...baseColumns.slice(3),
+    ]);
+
+    const tableSuccessCancelled = computed(() => [
+      ...baseColumns.slice(0, 6),
+    ]);
+
+
+    /* ===============================
+     TAB CONTROL
+    ============================== */
+    const tabs = ref("wait-tab");
+
+    const handleTabs = async (tab) => {
+      tabs.value = tab;
+      await store.setTab(tab);
+      clearCheckbox();
+      await loadTabData();
     };
 
-    const checkbox = useUtilityStore();
-    const clearCheckbox = async () => {
-      checkbox.updateSelectedCheckboxes([]);
-    };
+    watch(tabs, loadTabData);
 
-    // search bar start
+    /* ===============================
+     SEARCH
+    ============================== */
     const textInput = ref("");
+
     const filteredItems = computed(() => {
-      if (!textInput.value) {
-        return orders.value;
-      }
-      const keyword = textInput.value.toLowerCase();
-      return orders.value.filter(
-        (item) =>
-          item.number.toLowerCase().includes(keyword) ||
-          item.customer.toLowerCase().includes(keyword) ||
-          item.printdatetime.toLowerCase().includes(keyword) ||
-          item.saleschannel.toLowerCase().includes(keyword) ||
-          item.status.toLowerCase().includes(keyword)
-        // item.orderdate.toLowerCase().includes(keyword)
+      if (!textInput.value) return orders.value;
+      const k = textInput.value.toLowerCase();
+      return orders.value.filter(i =>
+        [i.number, i.customer, i.printdatetime, i.saleschannel, i.status]
+          .some(v => v?.toLowerCase().includes(k))
       );
     });
 
-    const handleSearch = (searchText) => {
-      textInput.value = searchText;
+    const handleSearch = (v) => (textInput.value = v);
+
+    /* ===============================
+     CHECKBOX
+    ============================== */
+    const checkbox = useUtilityStore();
+    const selected = ref([]);
+    const isItemSelected = ref(false);
+
+    const clearCheckbox = () => checkbox.updateSelectedCheckboxes([]);
+
+    const onSelectedUpdate = (val) => {
+      selected.value = val;
+      isItemSelected.value = val.length > 0;
+
+      if (!val.length) {
+        localStorage.removeItem("summaryData");
+        return;
+      }
+
+      const data = orders.value.filter(o => val.includes(o.id));
+      localStorage.setItem("summaryData", JSON.stringify(data));
     };
 
-    watch(tabs, async () => {
-      await loadTabData();
-    });
+    /* ===============================
+     PRINT (IFRAME – DRY)
+    ============================== */
+    const showIframe = ref(false);
 
-    const checkSidebarState = () => {
-      // Check if sidebar is collapsed by looking for the collapsed class
-      const sidebar = document.querySelector('[class*="w-18"]');
-      if (sidebar) {
-        isCollapsed.value = true;
-      } else {
-        isCollapsed.value = false;
+    const submitPrintForm = async (endpoint) => {
+      if (!selected.value.length) return;
+
+      showIframe.value = true;
+      await nextTick();
+
+      const form = document.createElement("form");
+      form.method = "POST";
+      form.action = import.meta.env.VITE_API_BASE_URL + endpoint;
+      form.target = "printIframe";
+
+      const input = document.createElement("input");
+      input.type = "hidden";
+      input.name = "checklist";
+      input.value = JSON.stringify(selected.value);
+
+      form.appendChild(input);
+      document.body.appendChild(form);
+      form.submit();
+      document.body.removeChild(form);
+    };
+
+    const printOriginal = () => submitPrintForm("/online/print/original");
+    const printOriginalAndCopy = () => submitPrintForm("/online/print/originalandcopy");
+    const printCopy = () => submitPrintForm("/online/print/copy");
+
+    const closeIframe = () => (showIframe.value = false);
+
+    /* ===============================
+     SUMMARY
+    ============================== */
+    const printSummary = () => {
+      
+      const data = orders.value.filter(o => selected.value.includes(o.id));
+      localStorage.setItem("summaryData", JSON.stringify(data));
+      window.open(import.meta.env.BASE_URL + "onlineManage/order/summary", "_blank");
+    
+    };
+
+
+
+    /* ===============================
+     MAKRO DELIVERY
+    ============================== */
+
+    let lastMakroPdfUrl = null
+    const printDeliveyMackro = async () => {
+
+      if (lastMakroPdfUrl) {
+        window.open(lastMakroPdfUrl, '_blank')
+        return
+      }
+      if (!selected.value.length) return;
+
+      try {
+        Swal.fire({
+          title: "กำลังเตรียมเอกสาร Makro",
+          text: `ทั้งหมด ${selected.value.length} ใบ`,
+          allowOutsideClick: false,
+          showConfirmButton: false,
+          didOpen: () => Swal.showLoading()
+        });
+
+        const res = await axios.post(
+          import.meta.env.VITE_API_BASE_URL +
+          "/online/api/order/printDeliveyMackro",
+          {
+            orderIds: selected.value
+          }
+        );
+
+
+
+        Swal.close();
+
+        // ✅ ใช้ pdfUrl จาก backend
+        if (!res.data?.pdfUrl) {
+          throw new Error("No pdfUrl returned");
+
+        }
+        // console.log('http://localhost:5173/12Online' + res.data.pdfUrl)
+
+        // ✅ เปิดผ่าน HTTP (browser อนุญาต)
+        lastMakroPdfUrl = import.meta.env.VITE_API_BASE_URL + res.data.pdfUrl
+        window.open(lastMakroPdfUrl, '_blank')
+
+
+        Swal.fire("สำเร็จ", "เปิดไฟล์ Delivery Makro แล้ว", "success");
+      } catch (err) {
+        console.error(err);
+        Swal.fire("ผิดพลาด", "ไม่สามารถสร้างไฟล์ Delivery Makro ได้", "error");
       }
     };
 
-
+    /* ===============================
+     UTIL
+    ============================== */
     const formatDateTime = (iso) => {
-      if (!iso) return '-'
+      if (!iso) return "-";
+      const d = new Date(iso);
+      return d.toLocaleString("th-TH", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    };
 
-      const d = new Date(iso)
-      const pad = (n) => String(n).padStart(2, '0')
-
-      return `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}`
-    }
-
+    /* ===============================
+     MOUNT
+    ============================== */
     onMounted(async () => {
-      isLoading.value = true;
-      await store.getOrderZort();
-
-      isLoading.value = false;
+      await loadTabData();
       checkSidebarState();
 
-      // Listen for changes in sidebar state
-      const observer = new MutationObserver(checkSidebarState);
-      observer.observe(document.body, {
+      new MutationObserver(checkSidebarState).observe(document.body, {
         attributes: true,
         subtree: true,
         attributeFilter: ["class"],
@@ -611,30 +631,27 @@ export default {
     });
 
     return {
-      formatDateTime,
+      isCollapsed,
       tableColumns,
       tableSuccess,
-      orders,
-      textInput,
       filteredItems,
+      textInput,
+      tableSuccessCancelled,
       handleSearch,
       selected,
       isItemSelected,
       onSelectedUpdate,
-      handleTabs,
       tabs,
-      printReceipt,
-      clearCheckbox,
-      afterPrint,
+      handleTabs,
       isLoading,
-      printSummary,
-      isCollapsed,
       showIframe,
-      iframeSrc,
-      showPrintIframe,
-      showPrintIframeAndCopy,
-      showPrintIframeCopy,
       closeIframe,
+      printOriginal,
+      printOriginalAndCopy,
+      printCopy,
+      printSummary,
+      printDeliveyMackro,
+      formatDateTime,
     };
   },
 };

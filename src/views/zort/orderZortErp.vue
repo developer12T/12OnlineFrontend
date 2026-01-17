@@ -17,6 +17,44 @@
           </svg>
           นำเข้าระบบ
         </button>
+
+        <button v-if="tabs === 'success-tab'" @click="printOriginal()"
+          class="bg-[#4CAF50] flex items-center hover:bg-green-600 text-white border border-green-500 hover:border-green-600 focus:ring-4 focus:outline-none focus:ring-green-300 gap-2 font-medium rounded-md text-sm px-5 py-2 text-center mb-2 sm:mb-0 dark:bg-green-600 dark:text-green-500 dark:hover:text-white dark:hover:bg-green-700 dark:focus:ring-green-800 mr-1"
+          :class="{ 'pointer-events-none': !isItemSelected }">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 48 48">
+            <path fill="#424242" d="M9 11h30v3H9z" />
+            <path fill="#616161" d="M4 25h40v-7c0-2.2-1.8-4-4-4H8c-2.2 0-4 1.8-4 4z" />
+            <path fill="#424242" d="M8 36h32c2.2 0 4-1.8 4-4v-8H4v8c0 2.2 1.8 4 4 4" />
+            <circle cx="40" cy="18" r="1" fill="#00e676" />
+            <path fill="#90caf9" d="M11 4h26v10H11z" />
+            <path fill="#242424"
+              d="M37.5 31h-27c-.8 0-1.5-.7-1.5-1.5s.7-1.5 1.5-1.5h27c.8 0 1.5.7 1.5 1.5s-.7 1.5-1.5 1.5" />
+            <path fill="#90caf9" d="M11 31h26v11H11z" />
+            <path fill="#42a5f5" d="M11 29h26v2H11z" />
+            <path fill="#1976d2" d="M16 33h17v2H16zm0 4h13v2H16z" />
+          </svg>
+          พิมพ์ต้นฉบับ
+          {{ selected.length > 0 ? selected.length + " ใบ" : "" }}
+        </button>
+        <button v-if="tabs === 'success-tab'" @click="printOriginalAndCopy()"
+          class="bg-[#4CAF50] flex items-center hover:bg-green-600 text-white border border-green-500 hover:border-green-600 focus:ring-4 focus:outline-none focus:ring-green-300 gap-2 font-medium rounded-md text-sm px-5 py-2 text-center mb-2 sm:mb-0 dark:bg-green-600 dark:text-green-500 dark:hover:text-white dark:hover:bg-green-700 dark:focus:ring-green-800 mr-1"
+          :class="{ 'pointer-events-none': !isItemSelected }">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 48 48">
+            <path fill="#424242" d="M9 11h30v3H9z" />
+            <path fill="#616161" d="M4 25h40v-7c0-2.2-1.8-4-4-4H8c-2.2 0-4 1.8-4 4z" />
+            <path fill="#424242" d="M8 36h32c2.2 0 4-1.8 4-4v-8H4v8c0 2.2 1.8 4 4 4" />
+            <circle cx="40" cy="18" r="1" fill="#00e676" />
+            <path fill="#90caf9" d="M11 4h26v10H11z" />
+            <path fill="#242424"
+              d="M37.5 31h-27c-.8 0-1.5-.7-1.5-1.5s.7-1.5 1.5-1.5h27c.8 0 1.5.7 1.5 1.5s-.7 1.5-1.5 1.5" />
+            <path fill="#90caf9" d="M11 31h26v11H11z" />
+            <path fill="#42a5f5" d="M11 29h26v2H11z" />
+            <path fill="#1976d2" d="M16 33h17v2H16zm0 4h13v2H16z" />
+          </svg>
+          พิมพ์ต้นฉบับและสำเนา
+          {{ selected.length > 0 ? selected.length + " ใบ" : "" }}
+
+        </button>
         <div class="flex items-center sm:order-2 mb-4 sm:mb-0 ml-4">
           <SearchBar :searchBar="textInput" @search="handleSearch" />
         </div>
@@ -117,97 +155,191 @@
             </div>
           </div>
         </div>
+        <div v-if="tabs === 'wait-tab'">
+          <Table :columns="tableColumns" :data="filteredItems" v-if="filteredItems.length > 0">
+            <template v-slot:createdatetime="{ row }">
+              {{ formatDateTime(row.createdatetime) }}
+            </template>
+            <template v-slot:status="{ row }">
 
-        <Table :columns="tableColumns" :data="filteredItems" v-if="filteredItems.length > 0">
-          <template v-slot:status="{ row }">
-            <div class="flex items-center justify-center">
-              <span v-if="row.status === 'Success'"
-                class="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">
-                {{ row.status }}
-              </span>
-              <span v-if="row.status === 'Pending'"
-                class="bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-300">
-                {{ row.status }}
-              </span>
-              <span v-if="row.status === 'Voided'"
-                class="bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300">
-                {{ row.status }}
-              </span>
-              <span v-if="row.status === 'Waiting'"
-                class="bg-yellow-100 text-yellow-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-yellow-900 dark:text-yellow-300">
-                {{ row.status }}
-              </span>
-            </div>
-          </template>
-          <template v-slot:paymentstatus="{ row }">
-            <div class="flex items-center justify-center">
-              <span v-if="row.paymentstatus === 'Paid'"
-                class="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">
-                {{ row.paymentstatus }}
-              </span>
-              <span v-if="row.paymentstatus === 'Pending'"
-                class="bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-300">
-                {{ row.paymentstatus }}
-              </span>
-              <span v-if="row.paymentstatus === 'Voided'"
-                class="bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300">
-                {{ row.paymentstatus }}
-              </span>
-            </div>
-          </template>
-          <template v-slot:saleschannel="{ row }">
-            <div class="flex items-center justify-center">
-              <img v-if="row.saleschannel === 'Shopee'" src="/shopee-icon.png" width="25" class="mr-1" />
-              <img v-if="row.saleschannel === 'Makro'" src="/makro.png" width="25" class="mr-1" />
-              <img v-else-if="row.saleschannel === 'Lazada'" src="/lazada-icon.png" width="25" class="mr-1" />
-              <img v-else-if="row.saleschannel === 'TIKTOK'" src="/tiktok.png" width="25" class="mr-1" />
-              <img v-else-if="row.saleschannel === 'Amaze'" src="/amaze.png" width="25" class="mr-1" />
+              <div class="flex items-center justify-center">
+                <span v-if="row.status === 'Success'"
+                  class="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">
+                  {{ row.status }}
+                </span>
+                <span v-if="row.status === 'Pending'"
+                  class="bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-300">
+                  {{ row.status }}
+                </span>
+                <span v-if="row.status === 'Voided'"
+                  class="bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300">
+                  {{ row.status }}
+                </span>
+                <span v-if="row.status === 'Waiting'"
+                  class="bg-yellow-100 text-yellow-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-yellow-900 dark:text-yellow-300">
+                  {{ row.status }}
+                </span>
+              </div>
+            </template>
+            <template v-slot:paymentstatus="{ row }">
 
+              <div class="flex items-center justify-center">
+                <span v-if="row.paymentstatus === 'Paid'"
+                  class="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">
+                  {{ row.paymentstatus }}
+                </span>
+                <span v-if="row.paymentstatus === 'Pending'"
+                  class="bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-300">
+                  {{ row.paymentstatus }}
+                </span>
+                <span v-if="row.paymentstatus === 'Voided'"
+                  class="bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300">
+                  {{ row.paymentstatus }}
+                </span>
+              </div>
+            </template>
+            <template v-slot:saleschannel="{ row }">
+              <div class="flex items-center justify-center">
+                <img v-if="row.saleschannel === 'Shopee'" src="/shopee-icon.png" width="25" class="mr-1" />
+                <img v-if="row.saleschannel === 'Makro'" src="/makro.png" width="25" class="mr-1" />
+                <img v-else-if="row.saleschannel === 'Lazada'" src="/lazada-icon.png" width="25" class="mr-1" />
+                <img v-else-if="row.saleschannel === 'TIKTOK'" src="/tiktok.png" width="25" class="mr-1" />
+                <img v-else-if="row.saleschannel === 'Amaze'" src="/amaze.png" width="25" class="mr-1" />
+
+              </div>
+            </template>
+          </Table>
+          <div v-else class="flex flex-col justify-center items-center h-full">
+            <div class="text-center">
+              <!-- Empty State Icon -->
+              <div class="mb-4">
+                <svg class="mx-auto h-16 w-16 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
+                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+              </div>
+              <!-- Empty State Text -->
+              <h3 class="text-lg font-medium text-gray-900 mb-2">ไม่มีข้อมูลรอนำเข้าระบบ</h3>
+              <p class="text-gray-500 text-sm mb-4">ยังไม่มีรายการที่รอการนำเข้าระบบ ERP</p>
+              <!-- Action Button -->
+              <button @click="refreshData"
+                class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                รีเฟรชข้อมูล
+              </button>
             </div>
-          </template>
-        </Table>
-        <div v-else class="flex flex-col justify-center items-center h-full">
-          <div class="text-center">
-            <!-- Empty State Icon -->
-            <div class="mb-4">
-              <svg class="mx-auto h-16 w-16 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
-                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
-            </div>
-            <!-- Empty State Text -->
-            <h3 class="text-lg font-medium text-gray-900 mb-2">ไม่มีข้อมูลรอนำเข้าระบบ</h3>
-            <p class="text-gray-500 text-sm mb-4">ยังไม่มีรายการที่รอการนำเข้าระบบ ERP</p>
-            <!-- Action Button -->
-            <button @click="refreshData"
-              class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-              </svg>
-              รีเฟรชข้อมูล
-            </button>
           </div>
         </div>
+        <div v-if="tabs === 'success-tab'">
+          <TableOrder :columns="tableColumns" :selected="selected" :data="filteredItems" v-if="filteredItems.length > 0"
+            @update:selected="onSelectedUpdate">
+            <template v-slot:createdatetime="{ row }">
+              {{ formatDateTime(row.createdatetime) }}
+            </template>
+            <template v-slot:status="{ row }">
+
+              <div class="flex items-center justify-center">
+                <span v-if="row.status === 'Success'"
+                  class="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">
+                  {{ row.status }}
+                </span>
+                <span v-if="row.status === 'Pending'"
+                  class="bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-300">
+                  {{ row.status }}
+                </span>
+                <span v-if="row.status === 'Voided'"
+                  class="bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300">
+                  {{ row.status }}
+                </span>
+                <span v-if="row.status === 'Waiting'"
+                  class="bg-yellow-100 text-yellow-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-yellow-900 dark:text-yellow-300">
+                  {{ row.status }}
+                </span>
+              </div>
+            </template>
+            <template v-slot:paymentstatus="{ row }">
+
+              <div class="flex items-center justify-center">
+                <span v-if="row.paymentstatus === 'Paid'"
+                  class="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">
+                  {{ row.paymentstatus }}
+                </span>
+                <span v-if="row.paymentstatus === 'Pending'"
+                  class="bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-300">
+                  {{ row.paymentstatus }}
+                </span>
+                <span v-if="row.paymentstatus === 'Voided'"
+                  class="bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300">
+                  {{ row.paymentstatus }}
+                </span>
+              </div>
+            </template>
+            <template v-slot:saleschannel="{ row }">
+              <div class="flex items-center justify-center">
+                <img v-if="row.saleschannel === 'Shopee'" src="/shopee-icon.png" width="25" class="mr-1" />
+                <img v-if="row.saleschannel === 'Makro'" src="/makro.png" width="25" class="mr-1" />
+                <img v-else-if="row.saleschannel === 'Lazada'" src="/lazada-icon.png" width="25" class="mr-1" />
+                <img v-else-if="row.saleschannel === 'TIKTOK'" src="/tiktok.png" width="25" class="mr-1" />
+                <img v-else-if="row.saleschannel === 'Amaze'" src="/amaze.png" width="25" class="mr-1" />
+
+              </div>
+            </template>
+          </TableOrder>
+        </div>
+
+
+
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { onMounted, computed, ref } from "vue";
+import { onMounted, computed, ref,nextTick  } from "vue";
 import { useAuthStore, useOrderStore, useDashboardStore } from "../../stores";
 import Swal from "sweetalert2";
 import SearchBar from "../../components/searchbar.vue";
 import Table from "../../components/table.vue";
+import TableOrder from "../../components/tableCheckbox.vue";
 import CountOrderErp from "./orderCount.vue";
 export default {
   components: {
     SearchBar,
     Table,
-    CountOrderErp
+    CountOrderErp,
+    TableOrder
   },
   setup() {
+
+    const showIframe = ref(false);
+    const printOriginal = () => submitPrintForm("/online/print/original");
+    const printOriginalAndCopy = () => submitPrintForm("/online/print/originalandcopy");
+    const printCopy = () => submitPrintForm("/online/print/copy");
+
+    const submitPrintForm = async (endpoint) => {
+      if (!selected.value.length) return;
+
+      showIframe.value = true;
+      await nextTick();
+
+      const form = document.createElement("form");
+      form.method = "POST";
+      form.action = import.meta.env.VITE_API_BASE_URL + endpoint;
+      form.target = "printIframe";
+
+      const input = document.createElement("input");
+      input.type = "hidden";
+      input.name = "checklist";
+      input.value = JSON.stringify(selected.value);
+
+      form.appendChild(input);
+      document.body.appendChild(form);
+      form.submit();
+      document.body.removeChild(form);
+    };
 
     const tableColumns = computed(() => {
       return [
@@ -223,6 +355,7 @@ export default {
     });
     const isCollapsed = ref(true);
     const store = useOrderStore();
+
     const orders = computed(() => {
       return store.zortOrder;
     });
@@ -432,9 +565,25 @@ export default {
       });
     });
 
+    const formatDateTime = (iso) => {
+      if (!iso) return "-";
+      const d = new Date(iso);
+      return d.toLocaleString("th-TH", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    };
+
     return {
       tableColumns,
       addOrder,
+      printCopy,
+      printOriginal,
+      printOriginalAndCopy,
+      formatDateTime,
       orders,
       textInput,
       filteredItems,

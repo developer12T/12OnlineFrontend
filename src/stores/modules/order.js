@@ -30,11 +30,15 @@ export const useOrderStore = defineStore('order', {
         const token = JSON.parse(localStorage.getItem('token'))
         const pageName = localStorage.getItem('orderPage')
         const tabName = this.tabName
+        const today = new Date()
+        const date = today.toISOString().slice(0, 10) // YYYY-MM-DD
+
         const reponse = await axios.post(
           import.meta.env.VITE_API_BASE_URL + '/online/api/order/all',
           {
             page: pageName,
-            tab: tabName
+            tab: tabName,
+            date: date 
           },
           {
             headers: {
@@ -44,7 +48,7 @@ export const useOrderStore = defineStore('order', {
         )
         const result = reponse.data
         this.zortOrder = result
-        localStorage.setItem('zortOrder', JSON.stringify(result));
+        localStorage.setItem('zortOrder', JSON.stringify(result))
         console.log('orderzort', this.zortOrder)
         console.log('orderpage', pageName)
         // console.log('orderpage', tabName)

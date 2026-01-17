@@ -6,6 +6,9 @@
         <div v-for="(pageItems, pageIndex) in paginatedSummaryData" :key="pageIndex" class="a4-page">
             <div class="header">
                 <h1>(ใบรวมสินค้า)</h1>
+                <div class="print-time">
+                    วันที่พิมพ์: {{ printDateTime }}
+                </div>
             </div>
             <table class="order-table mt-4">
                 <thead>
@@ -21,7 +24,7 @@
 
                     <tr v-for="item in pageItems" :key="item.id">
                         <td>{{ item.id }}</td>
-                        <td class="wrap-text">{{ item.name }}</td>
+                        <td class="wrap-text">{{ item.nameM3Full }}</td>
                         <td>{{ item.convertedUnits.large.qty }}</td>
                         <td>{{ item.convertedUnits.medium.qty }}</td>
                         <td>{{ item.convertedUnits.small.qty }}</td>
@@ -53,8 +56,9 @@ import { ref, onMounted, computed } from "vue";
 import { Icon } from "@iconify/vue";
 
 const summaryData = ref([]);
+const printDateTime = ref('');
 
-const itemsPerPage = 20;
+const itemsPerPage = 23;
 
 const paginatedSummaryData = computed(() => {
     const chunks = [];
@@ -76,7 +80,20 @@ const emptyRows = (pageIndex) => {
     return Math.max(itemsPerPage - paginatedSummaryData.value[pageIndex].length, 0);
 };
 
+function formatThaiDateTime(date = new Date()) {
+    return date.toLocaleString('th-TH', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+    });
+}
+
 onMounted(() => {
+    printDateTime.value = formatThaiDateTime(new Date());
+
     try {
         const data = JSON.parse(localStorage.getItem("summaryData"));
         if (data) {
@@ -107,7 +124,9 @@ function processSummaryData(data) {
     data.forEach((order) => {
         if (order.item && Array.isArray(order.item)) {
             order.item
-                .filter((product) => !product.sku.startsWith("ZNS"))
+                .filter((product) => !product.sku.startsWith("ZNS")
+                    && !product.sku.startsWith("DIS")
+                )
                 .forEach((product) => {
                     const productId = product.sku;
                     if (!grouped[productId]) {
@@ -165,6 +184,13 @@ body,
     overflow-y: auto !important;
 }
 
+.print-time {
+    text-align: right;
+    font-size: 12px;
+    margin-top: 4px;
+    color: #000;
+}
+
 .a4-pages {
     display: flex;
     overflow-y: auto;
@@ -194,6 +220,10 @@ body,
     text-align: center;
     margin-bottom: 1mm;
 }
+
+/* .header {
+    position: relative;
+} */
 
 .header h1 {
     font-size: 20px;
