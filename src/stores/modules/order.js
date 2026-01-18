@@ -38,7 +38,7 @@ export const useOrderStore = defineStore('order', {
           {
             page: pageName,
             tab: tabName,
-            date: date 
+            date: date
           },
           {
             headers: {
@@ -126,6 +126,7 @@ export const useOrderStore = defineStore('order', {
           return {
             discount: discountPerUnit,
             itemCode: it.sku,
+            // itemCode: it.itemCode,
             netPrice: it.pricepernumber,
             price: it.pricepernumberOri,
             promotionCode: it.procode,
@@ -154,7 +155,7 @@ export const useOrderStore = defineStore('order', {
           payer: order.customercode,
           ref: `${order.number}`,
           requestDate,
-          total: total,
+          total,
           totalNet: order.amount,
           warehouse: '108',
           item: items
@@ -162,27 +163,44 @@ export const useOrderStore = defineStore('order', {
       }
 
       try {
-        const payload = orders.map(mapOrderToERP)
+        const BLOCK_ITEM = '10013601003'
+        // 🔴 STEP สำคัญ: ตัด order ที่มี BLOCK_ITEM ทิ้งทั้งก้อน
+        const filteredOrders = orders.filter(order => {
+          const hasBlockedItem = order.item?.some(
+            it => String(it.sku).trim() === BLOCK_ITEM
+          )
+
+          if (hasBlockedItem) {
+            console.log(`⛔ Skip order ${order.number} (found ${BLOCK_ITEM})`)
+          }
+
+          return !hasBlockedItem
+        })
+
+        // กัน edge case: ถ้าไม่เหลือ order เลย
+        if (filteredOrders.length === 0) {
+          console.log('⚠️ No orders to send to ERP')
+          return { success: true, message: 'No valid orders' }
+        }
+
+        const payload = filteredOrders.map(mapOrderToERP)
         console.log('payload', payload)
+
         const response = await axios.post(
           import.meta.env.VITE_API_ERP_URL + '/erp/order/insert',
           payload
         )
 
-        // 2️⃣ ถ้ามี successfulOrders → ยิงกลับมา update Mongo
+        // 2️⃣ update Mongo เฉพาะ order ที่เข้า ERP จริง
         const successfulOrders = response.data?.successfulOrders
 
         if (Array.isArray(successfulOrders) && successfulOrders.length > 0) {
           await axios.post(
             import.meta.env.VITE_API_BASE_URL +
               '/online/api/order/m3/update-status-success',
+            { successfulOrders },
             {
-              successfulOrders
-            },
-            {
-              headers: {
-                'x-channel': 'uat' // หรือ channel ที่คุณใช้จริง
-              }
+              headers: { 'x-channel': 'uat' }
             }
           )
         }
@@ -192,6 +210,7 @@ export const useOrderStore = defineStore('order', {
         console.error(error)
       }
     },
+
     async addDataOrderLog (order) {
       try {
         const token = JSON.parse(localStorage.getItem('token'))
