@@ -207,7 +207,7 @@ export const useOrderStore = defineStore('order', {
         while (attempt <= MAX_RETRY && !success) {
           try {
             attempt++
-            await axios.post(`${ERP_URL}/erp/order/insert`, payload, {
+            await axios.post(`${ERP_URL}/erp/order/insert`, [payload], {
               timeout: 15000
             })
 
