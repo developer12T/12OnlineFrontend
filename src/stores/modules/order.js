@@ -110,10 +110,22 @@ export const useOrderStore = defineStore('order', {
       const CHANNEL = 'uat'
       const BLOCK_ITEM = '10013601003'
       const MAX_RETRY = 2
+      const BATCH_SIZE = 50
+      const BATCH_DELAY = 4000 // เว้น 4 วิ ต่อ batch
 
       // ===============================
       // Utils
       // ===============================
+      const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
+
+      const chunkArray = (arr = [], size = 50) => {
+        const result = []
+        for (let i = 0; i < arr.length; i += size) {
+          result.push(arr.slice(i, i + size))
+        }
+        return result
+      }
+
       const formatDateYYYYMMDD = date => {
         const d = new Date(date)
         if (isNaN(d)) return ''
@@ -128,24 +140,22 @@ export const useOrderStore = defineStore('order', {
         const orderDate = formatDateYYYYMMDD(order.updatedAt)
         const requestDate = formatDateYYYYMMDD(new Date())
 
-        const items = order.item
-          .map(it => {
-            const qty = Number(it.number) || 0
-            const discount = Number(it.discount) || 0
+        const items = order.item.map(it => {
+          const qty = Number(it.number) || 0
+          const discount = Number(it.discount) || 0
 
-            return {
-              itemCode: it.sku,
-              qty,
-              unit: it.unit,
-              price: it.pricepernumberOri,
-              netPrice: it.pricepernumber,
-              discount: qty > 0 ? Number((discount / qty).toFixed(2)) : 0,
-              total: it.totalprice,
-              promotionCode: it.procode || ''
-            }
-          })
+          return {
+            itemCode: it.sku,
+            qty,
+            unit: it.unit,
+            price: it.pricepernumberOri,
+            netPrice: it.pricepernumber,
+            discount: qty > 0 ? Number((discount / qty).toFixed(2)) : 0,
+            total: it.totalprice,
+            promotionCode: it.procode || ''
+          }
+        })
 
-        // const total = items.reduce((s, i) => s + Number(i.total || 0), 0)
         const total = items
           .filter(i => i.itemCode !== 'DISONLINE')
           .reduce((sum, i) => sum + Number(i.total), 0)
@@ -172,10 +182,8 @@ export const useOrderStore = defineStore('order', {
         }
       }
 
-      const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
-
       // ===============================
-      // STEP 1: filter blocked orders
+      // STEP 1: filter BLOCK_ITEM
       // ===============================
       const validOrders = orders.filter(order => {
         const hasBlocked = order.item?.some(
@@ -194,46 +202,68 @@ export const useOrderStore = defineStore('order', {
       }
 
       // ===============================
-      // STEP 2: send to ERP (1 order / request)
+      // STEP 2: split เป็น batch ละ 50
       // ===============================
+      const batches = chunkArray(validOrders, BATCH_SIZE)
+
       const successOrders = []
       const failedOrders = []
 
-      for (const order of validOrders) {
-        const payload = mapOrderToERP(order)
+      // ===============================
+      // STEP 3: ส่งทีละ batch
+      // ===============================
+      for (let i = 0; i < batches.length; i++) {
+        const batch = batches[i]
+        const payloads = batch.map(mapOrderToERP)
+
         let attempt = 0
         let success = false
 
         while (attempt <= MAX_RETRY && !success) {
           try {
             attempt++
-            await axios.post(`${ERP_URL}/erp/order/insert`, [payload], {
-              timeout: 15000
+
+            console.log(
+              `🚚 Send batch ${i + 1}/${batches.length} (${
+                batch.length
+              } orders)`
+            )
+
+            await axios.post(`${ERP_URL}/erp/order/insert`, payloads, {
+              timeout: 30000
             })
 
-            console.log(`✅ ERP OK: ${order.number}`)
-            successOrders.push(order.number)
+            successOrders.push(...batch.map(o => o.number))
+            console.log(`✅ ERP OK batch ${i + 1}`)
             success = true
           } catch (err) {
             console.error(
-              `❌ ERP FAIL: ${order.number} (attempt ${attempt})`,
+              `❌ ERP FAIL batch ${i + 1} (attempt ${attempt})`,
               err?.response?.data || err.message
             )
 
-            if (attempt <= MAX_RETRY) {
-              await sleep(1000 * attempt) // backoff
+            if (err.response?.status === 429) {
+              console.warn('⏳ 429 Too Many Requests → wait longer')
+              await sleep(6000)
+            } else if (attempt <= MAX_RETRY) {
+              await sleep(2000 * attempt)
             } else {
-              failedOrders.push({
-                orderNo: order.number,
-                reason: err?.response?.data || err.message
-              })
+              batch.forEach(o =>
+                failedOrders.push({
+                  orderNo: o.number,
+                  reason: err?.response?.data || err.message
+                })
+              )
             }
           }
         }
+
+        // 🔒 คุม rate ต่อ batch
+        await sleep(BATCH_DELAY)
       }
 
       // ===============================
-      // STEP 3: update Mongo เฉพาะใบที่เข้า ERP
+      // STEP 4: update Mongo เฉพาะที่เข้า ERP
       // ===============================
       if (successOrders.length) {
         try {
@@ -254,6 +284,7 @@ export const useOrderStore = defineStore('order', {
         success: true,
         summary: {
           total: validOrders.length,
+          batch: batches.length,
           success: successOrders.length,
           failed: failedOrders.length
         },
@@ -261,6 +292,7 @@ export const useOrderStore = defineStore('order', {
         failedOrders
       }
     },
+
     // async addOrderErp (orders) {
     //   function formatDateYYYYMMDD (dateStr) {
     //     const d = new Date(dateStr)
