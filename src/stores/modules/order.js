@@ -108,10 +108,9 @@ export const useOrderStore = defineStore('order', {
       const ERP_URL = import.meta.env.VITE_API_ERP_URL
       const BASE_URL = import.meta.env.VITE_API_BASE_URL
       const CHANNEL = 'uat'
-      const BLOCK_ITEM = '10013601003'
-      const MAX_RETRY = 2
+
       const BATCH_SIZE = 50
-      const BATCH_DELAY = 4000 // เว้น 4 วิ ต่อ batch
+      // const BLOCK_ITEM = '10013601003'
 
       // ===============================
       // Utils
@@ -126,33 +125,33 @@ export const useOrderStore = defineStore('order', {
         return result
       }
 
-      const formatDateYYYYMMDD = date => {
-        const d = new Date(date)
-        if (isNaN(d)) return ''
-        return [
-          d.getFullYear(),
-          String(d.getMonth() + 1).padStart(2, '0'),
-          String(d.getDate()).padStart(2, '0')
-        ].join('')
+      function formatDateYYYYMMDD (dateStr) {
+        const d = new Date(dateStr)
+        const y = d.getFullYear()
+        const m = String(d.getMonth() + 1).padStart(2, '0')
+        const day = String(d.getDate()).padStart(2, '0')
+        return `${y}${m}${day}`
       }
 
-      const mapOrderToERP = order => {
-        const orderDate = formatDateYYYYMMDD(order.printdatetimeString)
+      function mapOrderToERP (order) {
+        const orderDate = formatDateYYYYMMDD(order.updatedAt)
         const requestDate = formatDateYYYYMMDD(new Date())
 
         const items = order.item.map(it => {
           const qty = Number(it.number) || 0
           const discount = Number(it.discount) || 0
+          const discountPerUnit =
+            qty > 0 ? Number((discount / qty).toFixed(2)) : 0
 
           return {
+            discount: discountPerUnit,
             itemCode: it.sku,
-            qty,
-            unit: it.unit,
-            price: it.pricepernumberOri,
             netPrice: it.pricepernumber,
-            discount: qty > 0 ? Number((discount / qty).toFixed(2)) : 0,
+            price: it.pricepernumberOri,
+            promotionCode: it.procode,
+            qty,
             total: it.totalprice,
-            promotionCode: it.procode || ''
+            unit: it.unit
           }
         })
 
@@ -165,131 +164,119 @@ export const useOrderStore = defineStore('order', {
           OAFRE1: 'YSEND',
           addressID: 'SHIP1',
           customerNo: order.customercode,
-          payer: order.customercode,
-          warehouse: '108',
-          orderType: '071',
-          orderStatusHigh: 22,
-          orderStatusLow: 22,
+          note: '',
           orderDate,
-          requestDate,
           orderNo: order.cono,
           invoice: order.invno,
-          ref: String(order.number),
-          note: '',
+          orderStatusHigh: 22,
+          orderStatusLow: 22,
+          orderType: '071',
+          payer: order.customercode,
+          ref: `${order.number}`,
+          requestDate,
           total,
           totalNet: order.amount,
+          warehouse: '108',
           item: items
         }
       }
 
-      // ===============================
-      // STEP 1: filter BLOCK_ITEM
-      // ===============================
-      // const validOrders = orders.filter(order => {
-      //   const hasBlocked = order.item?.some(
-      //     it => String(it.sku).trim() === BLOCK_ITEM
-      //   )
+      try {
+        // ===============================
+        // 1. ตัด order ที่มี BLOCK_ITEM
+        // ===============================
+        // const filteredOrders = orders.filter(order => {
+        //   const hasBlockedItem = order.item?.some(
+        //     it => String(it.sku).trim() === BLOCK_ITEM
+        //   )
 
-      //   if (hasBlocked) {
-      //     console.warn(`⛔ Skip order ${order.number} (BLOCK_ITEM)`)
-      //   }
-      //   return !hasBlocked
-      // })
+        //   if (hasBlockedItem) {
+        //     console.log(`⛔ Skip order ${order.number} (found ${BLOCK_ITEM})`)
+        //   }
 
-      // if (!validOrders.length) {
-      //   console.log('⚠️ No valid orders to send ERP')
-      //   return { success: true, message: 'No valid orders' }
-      // }
+        //   return !hasBlockedItem
+        // })
 
-      // ===============================
-      // STEP 2: split เป็น batch ละ 50
-      // ===============================
-      const batches = chunkArray(orders, BATCH_SIZE)
+        // if (!filteredOrders.length) {
+        //   return {
+        //     message: 'No valid orders',
+        //     successfulOrders: [],
+        //     failedOrders: []
+        //   }
+        // }
 
-      const successOrders = []
-      const failedOrders = []
+        // ===============================
+        // 2. แบ่ง batch
+        // ===============================
+        const batches = chunkArray(orders, BATCH_SIZE)
 
-      // ===============================
-      // STEP 3: ส่งทีละ batch
-      // ===============================
-      for (let i = 0; i < batches.length; i++) {
-        const batch = batches[i]
-        const payloads = batch.map(mapOrderToERP)
+        const allSuccessful = []
+        const allFailed = []
 
-        let attempt = 0
-        let success = false
+        // ===============================
+        // 3. ส่งทีละ batch
+        // ===============================
+        for (let i = 0; i < batches.length; i++) {
+          const batch = batches[i]
+          const payload = batch.map(mapOrderToERP)
 
-        while (attempt <= MAX_RETRY && !success) {
+          console.log(
+            `🚀 Send batch ${i + 1}/${batches.length}`,
+            payload.length
+          )
+
           try {
-            attempt++
+            const res = await axios.post(ERP_URL + '/erp/order/insert', payload)
 
-            console.log(
-              `🚚 Send batch ${i + 1}/${batches.length} (${
-                batch.length
-              } orders)`
-            )
+            const successfulOrders = res.data?.successfulOrders ?? []
+            const failedOrders = res.data?.failedOrders ?? []
 
-            await axios.post(`${ERP_URL}/erp/order/insert`, payloads, {
-              timeout: 30000
-            })
+            allSuccessful.push(...successfulOrders)
+            allFailed.push(...failedOrders)
 
-            successOrders.push(...batch.map(o => o.number))
-            console.log(`✅ ERP OK batch ${i + 1}`)
-            success = true
-          } catch (err) {
-            console.error(
-              `❌ ERP FAIL batch ${i + 1} (attempt ${attempt})`,
-              err?.response?.data || err.message
-            )
-
-            if (err.response?.status === 429) {
-              console.warn('⏳ 429 Too Many Requests → wait longer')
-              await sleep(6000)
-            } else if (attempt <= MAX_RETRY) {
-              await sleep(2000 * attempt)
-            } else {
-              batch.forEach(o =>
-                failedOrders.push({
-                  orderNo: o.number,
-                  reason: err?.response?.data || err.message
-                })
+            // update Mongo เฉพาะที่เข้า ERP จริง
+            if (successfulOrders.length > 0) {
+              await axios.post(
+                BASE_URL + '/online/api/order/m3/update-status-success',
+                { successfulOrders },
+                { headers: { 'x-channel': CHANNEL } }
               )
             }
+          } catch (err) {
+            console.error(`❌ Batch ${i + 1} failed`, err)
+
+            // ถ้า batch ล้มทั้งก้อน → mark เป็น failed
+            batch.forEach(o => {
+              allFailed.push({
+                orderNo: o.cono,
+                error:
+                  err?.response?.data?.message || err.message || 'ERP error'
+              })
+            })
           }
+
+          // หน่วงนิดหน่อยกัน ERP rate limit
+          await sleep(1500)
         }
 
-        // 🔒 คุม rate ต่อ batch
-        await sleep(BATCH_DELAY)
-      }
-
-      // ===============================
-      // STEP 4: update Mongo เฉพาะที่เข้า ERP
-      // ===============================
-      if (successOrders.length) {
-        try {
-          await axios.post(
-            `${BASE_URL}/online/api/order/m3/update-status-success`,
-            { successfulOrders: successOrders },
-            { headers: { 'x-channel': CHANNEL } }
-          )
-        } catch (err) {
-          console.error('⚠️ Update Mongo failed', err.message)
+        // ===============================
+        // 4. return ก้อนเดียว (สำคัญ)
+        // ===============================
+        return {
+          message: `ส่งเข้า ERP แล้ว ${allSuccessful.length} รายการ จากทั้งหมด ${filteredOrders.length}`,
+          successfulOrders: allSuccessful,
+          failedOrders: allFailed
         }
-      }
-
-      // ===============================
-      // RESULT
-      // ===============================
-      return {
-        success: true,
-        summary: {
-          // total: validOrders.length,
-          batch: batches.length,
-          success: successOrders.length,
-          failed: failedOrders.length
-        },
-        successOrders,
-        failedOrders
+      } catch (error) {
+        console.error(error)
+        return {
+          message: 'Unexpected error',
+          successfulOrders: [],
+          failedOrders: orders.map(o => ({
+            orderNo: o.cono,
+            error: error.message
+          }))
+        }
       }
     },
 
