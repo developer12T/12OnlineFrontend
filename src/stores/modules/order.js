@@ -137,7 +137,7 @@ export const useOrderStore = defineStore('order', {
       }
 
       const mapOrderToERP = order => {
-        const orderDate = formatDateYYYYMMDD(order.updatedAt)
+        const orderDate = formatDateYYYYMMDD(order.printdatetimeString)
         const requestDate = formatDateYYYYMMDD(new Date())
 
         const items = order.item.map(it => {
