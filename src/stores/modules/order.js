@@ -185,26 +185,26 @@ export const useOrderStore = defineStore('order', {
       // ===============================
       // STEP 1: filter BLOCK_ITEM
       // ===============================
-      const validOrders = orders.filter(order => {
-        const hasBlocked = order.item?.some(
-          it => String(it.sku).trim() === BLOCK_ITEM
-        )
+      // const validOrders = orders.filter(order => {
+      //   const hasBlocked = order.item?.some(
+      //     it => String(it.sku).trim() === BLOCK_ITEM
+      //   )
 
-        if (hasBlocked) {
-          console.warn(`⛔ Skip order ${order.number} (BLOCK_ITEM)`)
-        }
-        return !hasBlocked
-      })
+      //   if (hasBlocked) {
+      //     console.warn(`⛔ Skip order ${order.number} (BLOCK_ITEM)`)
+      //   }
+      //   return !hasBlocked
+      // })
 
-      if (!validOrders.length) {
-        console.log('⚠️ No valid orders to send ERP')
-        return { success: true, message: 'No valid orders' }
-      }
+      // if (!validOrders.length) {
+      //   console.log('⚠️ No valid orders to send ERP')
+      //   return { success: true, message: 'No valid orders' }
+      // }
 
       // ===============================
       // STEP 2: split เป็น batch ละ 50
       // ===============================
-      const batches = chunkArray(validOrders, BATCH_SIZE)
+      const batches = chunkArray(orders, BATCH_SIZE)
 
       const successOrders = []
       const failedOrders = []
