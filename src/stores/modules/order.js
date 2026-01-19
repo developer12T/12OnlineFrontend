@@ -197,18 +197,20 @@ export const useOrderStore = defineStore('order', {
         //   return !hasBlockedItem
         // })
 
-        // if (!filteredOrders.length) {
-        //   return {
-        //     message: 'No valid orders',
-        //     successfulOrders: [],
-        //     failedOrders: []
-        //   }
-        // }
+        const filteredOrders = orders
+
+        if (!filteredOrders.length) {
+          return {
+            message: 'No valid orders',
+            successfulOrders: [],
+            failedOrders: []
+          }
+        }
 
         // ===============================
         // 2. แบ่ง batch
         // ===============================
-        const batches = chunkArray(orders, BATCH_SIZE)
+        const batches = chunkArray(filteredOrders, BATCH_SIZE)
 
         const allSuccessful = []
         const allFailed = []
