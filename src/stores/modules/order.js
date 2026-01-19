@@ -283,7 +283,7 @@ export const useOrderStore = defineStore('order', {
       return {
         success: true,
         summary: {
-          total: validOrders.length,
+          // total: validOrders.length,
           batch: batches.length,
           success: successOrders.length,
           failed: failedOrders.length
