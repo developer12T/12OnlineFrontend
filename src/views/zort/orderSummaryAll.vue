@@ -132,7 +132,7 @@ function processSummaryData(data) {
                     if (!grouped[productId]) {
                         grouped[productId] = {
                             id: product.sku,
-                            name: product.name,
+                            nameM3Full: product.nameM3Full,
                             convertedUnits: {
                                 large: { qty: 0 },
                                 medium: { qty: 0 },
