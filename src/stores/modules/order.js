@@ -171,7 +171,7 @@ export const useOrderStore = defineStore('order', {
           orderStatusHigh: 22,
           orderStatusLow: 22,
           orderType: '071',
-          payer: order.customercode,
+          payer: 'O00000001',
           ref: `${order.number}`,
           requestDate,
           total,
