@@ -135,7 +135,7 @@ export const useOrderStore = defineStore('order', {
 
       function mapOrderToERP (order) {
         const orderDate = formatDateYYYYMMDD(order.printdatetimeString)
-        const requestDate = formatDateYYYYMMDD(new Date())
+        const requestDate = formatDateYYYYMMDD(order.printdatetimeString)
 
         const items = order.item.map(it => {
           const qty = Number(it.number) || 0
@@ -228,7 +228,10 @@ export const useOrderStore = defineStore('order', {
           )
 
           try {
-            const res = await axios.post(ERP_URL + '/erp/order/insert', payload)
+            const res = await axios.post(
+              'https://apps.onetwotrading.co.th' + '/erp/order/insert',
+              payload
+            )
 
             const successfulOrders = res.data?.successfulOrders ?? []
             const failedOrders = res.data?.failedOrders ?? []
