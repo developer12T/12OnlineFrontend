@@ -59,6 +59,17 @@
           ใบรวม
           {{ selected.length > 0 ? selected.length + " รายการ" : "" }}
         </button>
+
+        <button @click="downloadSummaryExcel(selected)"
+          class="bg-[#4CAF50] shadow-md flex items-center hover:bg-green-600 text-white border border-[#007BFF] hover:border-green-600 focus:ring-4 focus:outline-none focus:ring-green-300 gap-2 font-medium rounded-md text-sm px-5 py-2 text-center mb-2 sm:mb-0 dark:bg-green-600 dark:text-green-500 dark:hover:text-white dark:hover:bg-green-700 dark:focus:ring-green-800 sm:ml-4"
+          :class="{ 'pointer-events-none': !isItemSelected }">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <path fill="currentColor"
+              d="M9 18q-.825 0-1.412-.587T7 16V4q0-.825.588-1.412T9 2h9q.825 0 1.413.588T20 4v12q0 .825-.587 1.413T18 18zm0-2h9V4H9zM4 8q-.425 0-.712-.288T3 7t.288-.712T4 6t.713.288T5 7t-.288.713T4 8m0 3.5q-.425 0-.712-.288T3 10.5t.288-.712T4 9.5t.713.288T5 10.5t-.288.713T4 11.5M4 15q-.425 0-.712-.288T3 14t.288-.712T4 13t.713.288T5 14t-.288.713T4 15m0 3.5q-.425 0-.712-.288T3 17.5t.288-.712T4 16.5t.713.288T5 17.5t-.288.713T4 18.5M4 22q-.425 0-.712-.288T3 21t.288-.712T4 20t.713.288T5 21t-.288.713T4 22m3.5 0q-.425 0-.712-.288T6.5 21t.288-.712T7.5 20t.713.288T8.5 21t-.288.713T7.5 22m3.5 0q-.425 0-.712-.288T10 21t.288-.712T11 20t.713.288T12 21t-.288.713T11 22m3.5 0q-.425 0-.712-.288T13.5 21t.288-.712T14.5 20t.713.288t.287.712t-.288.713T14.5 22" />
+          </svg>
+          Export Excel
+          {{ selected.length > 0 ? selected.length + " รายการ" : "" }}
+        </button>
       </div>
       <div class="flex items-center rounded-lg p-2" v-else-if="this.tabs === 'success-tab'">
         <button @click="printOriginalAndCopy()"
@@ -105,6 +116,28 @@
 
           Delivery Mackro
           {{ selected.length > 0 ? selected.length + " ใบ" : "" }}
+        </button>
+
+        <button @click="printSummary(selected)"
+          class="bg-[#007BFF] shadow-md flex items-center hover:bg-green-600 text-white border border-[#007BFF] hover:border-green-600 focus:ring-4 focus:outline-none focus:ring-green-300 gap-2 font-medium rounded-md text-sm px-5 py-2 text-center mb-2 sm:mb-0 dark:bg-green-600 dark:text-green-500 dark:hover:text-white dark:hover:bg-green-700 dark:focus:ring-green-800 sm:ml-4"
+          :class="{ 'pointer-events-none': !isItemSelected }">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <path fill="currentColor"
+              d="M9 18q-.825 0-1.412-.587T7 16V4q0-.825.588-1.412T9 2h9q.825 0 1.413.588T20 4v12q0 .825-.587 1.413T18 18zm0-2h9V4H9zM4 8q-.425 0-.712-.288T3 7t.288-.712T4 6t.713.288T5 7t-.288.713T4 8m0 3.5q-.425 0-.712-.288T3 10.5t.288-.712T4 9.5t.713.288T5 10.5t-.288.713T4 11.5M4 15q-.425 0-.712-.288T3 14t.288-.712T4 13t.713.288T5 14t-.288.713T4 15m0 3.5q-.425 0-.712-.288T3 17.5t.288-.712T4 16.5t.713.288T5 17.5t-.288.713T4 18.5M4 22q-.425 0-.712-.288T3 21t.288-.712T4 20t.713.288T5 21t-.288.713T4 22m3.5 0q-.425 0-.712-.288T6.5 21t.288-.712T7.5 20t.713.288T8.5 21t-.288.713T7.5 22m3.5 0q-.425 0-.712-.288T10 21t.288-.712T11 20t.713.288T12 21t-.288.713T11 22m3.5 0q-.425 0-.712-.288T13.5 21t.288-.712T14.5 20t.713.288t.287.712t-.288.713T14.5 22" />
+          </svg>
+          ใบรวม
+          {{ selected.length > 0 ? selected.length + " รายการ" : "" }}
+        </button>
+
+        <button @click="downloadSummaryExcel(selected)"
+          class="bg-[#4CAF50] shadow-md flex items-center hover:bg-green-600 text-white border border-[#007BFF] hover:border-green-600 focus:ring-4 focus:outline-none focus:ring-green-300 gap-2 font-medium rounded-md text-sm px-5 py-2 text-center mb-2 sm:mb-0 dark:bg-green-600 dark:text-green-500 dark:hover:text-white dark:hover:bg-green-700 dark:focus:ring-green-800 sm:ml-4"
+          :class="{ 'pointer-events-none': !isItemSelected }">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <path fill="currentColor"
+              d="M9 18q-.825 0-1.412-.587T7 16V4q0-.825.588-1.412T9 2h9q.825 0 1.413.588T20 4v12q0 .825-.587 1.413T18 18zm0-2h9V4H9zM4 8q-.425 0-.712-.288T3 7t.288-.712T4 6t.713.288T5 7t-.288.713T4 8m0 3.5q-.425 0-.712-.288T3 10.5t.288-.712T4 9.5t.713.288T5 10.5t-.288.713T4 11.5M4 15q-.425 0-.712-.288T3 14t.288-.712T4 13t.713.288T5 14t-.288.713T4 15m0 3.5q-.425 0-.712-.288T3 17.5t.288-.712T4 16.5t.713.288T5 17.5t-.288.713T4 18.5M4 22q-.425 0-.712-.288T3 21t.288-.712T4 20t.713.288T5 21t-.288.713T4 22m3.5 0q-.425 0-.712-.288T6.5 21t.288-.712T7.5 20t.713.288T8.5 21t-.288.713T7.5 22m3.5 0q-.425 0-.712-.288T10 21t.288-.712T11 20t.713.288T12 21t-.288.713T11 22m3.5 0q-.425 0-.712-.288T13.5 21t.288-.712T14.5 20t.713.288t.287.712t-.288.713T14.5 22" />
+          </svg>
+          Export Excel
+          {{ selected.length > 0 ? selected.length + " รายการ" : "" }}
         </button>
       </div>
 
@@ -378,6 +411,7 @@ import CountOrder from "./orderCount.vue";
 import SearchOrder from "../../components/searchbar.vue";
 import TableOrder from "../../components/tableCheckbox.vue";
 import axios from "axios";
+import { saveAs } from "file-saver";
 
 export default {
   components: { CountOrder, SearchOrder, TableOrder },
@@ -539,11 +573,11 @@ export default {
      SUMMARY
     ============================== */
     const printSummary = () => {
-      
+
       const data = orders.value.filter(o => selected.value.includes(o.id));
       localStorage.setItem("summaryData", JSON.stringify(data));
       window.open(import.meta.env.BASE_URL + "onlineManage/order/summary", "_blank");
-    
+
     };
 
 
@@ -601,6 +635,22 @@ export default {
       }
     };
 
+    const downloadSummaryExcel = async () => {
+      if (!selected.value.length) {
+        alert("กรุณาเลือก Order ก่อน");
+        return;
+      }
+
+      const res = await axios.post(
+        import.meta.env.VITE_API_BASE_URL +
+        "/online/api/order/export-summary",
+        { orderIds: selected.value },
+        { responseType: "blob" }
+      );
+
+      saveAs(res.data, "summary_order.xlsx");
+    };
+
     /* ===============================
      UTIL
     ============================== */
@@ -652,6 +702,7 @@ export default {
       printSummary,
       printDeliveyMackro,
       formatDateTime,
+      downloadSummaryExcel
     };
   },
 };

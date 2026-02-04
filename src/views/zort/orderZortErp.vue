@@ -349,7 +349,7 @@ export default {
         { id: "number", title: "รายการ" },
         { id: "customer", title: "ลูกค้า" },
         { id: "amount", title: "มูลค่า" },
-        { id: "status", title: "สถานะ" },
+        { id: "netamountM3", title: "มูลค่า (M3)" },
         { id: "saleschannel", title: "ช่องทาง" },
       ];
     });
