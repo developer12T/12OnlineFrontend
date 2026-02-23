@@ -42,6 +42,10 @@ export default {
     {
       path: 'order/summary',
       component: () => import('../views/zort/orderSummaryAll.vue')
+    },
+    {
+      path: 'manual',
+      component: () => import('../views/zort/manualOnline.vue')
     }
   ]
 }

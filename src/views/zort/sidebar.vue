@@ -121,9 +121,28 @@
                   xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                   <path fill="currentColor"
                     d="M3 11h8V3H3zm2-6h4v4H5zM3 21h8v-8H3zm2-6h4v4H5zm8-12v8h8V3zm6 6h-4V5h4zm-5.99 4h2v2h-2zm2 2h2v2h-2zm-2 2h2v2h-2zm4 0h2v2h-2zm2 2h2v2h-2zm-4 0h2v2h-2zm2-6h2v2h-2zm2 2h2v2h-2z" />
-                </svg><span class="text-[10px]">QrCode</span>
+                </svg><span class="text-[10px]">Qr Code</span>
               </span>
             </a>
+          </li>
+
+          <li>
+            <!-- collapsed: เปิด popup อย่างเดียว -->
+            <div class="flex items-center p-3 text-white rounded-lg hover:bg-sky-600 cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105">
+              <router-link to="/onlineManage/manual">
+                <div class="flex flex-col items-center">
+                  <svg class="w-5 h-5 text-gray-300 group-hover:text-white" fill="currentColor" viewBox="0 0 22 21">
+                    <path
+                      d="M16.975 11H10V4.025a1 1 0 0 0-1.066-.998 8.5 8.5 0 1 0 9.039 9.039.999.999 0 0 0-1-1.066h.002Z" />
+                    <path
+                      d="M12.5 0c-.157 0-.311.01-.565.027A1 1 0 0 0 11 1.02V10h8.975a1 1 0 0 0 1-.935c.013-.188.028-.374.028-.565A8.51 8.51 0 0 0 12.5 0Z" />
+                  </svg>
+                  <span class="text-[10px] mt-1">คู่มือการใช้งาน</span>
+                </div>
+              </router-link>
+            </div>
+
+          
           </li>
         </ul>
       </div>
