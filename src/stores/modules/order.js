@@ -229,7 +229,7 @@ export const useOrderStore = defineStore('order', {
 
           try {
             const res = await axios.post(
-              'http://localhost:8007' + '/erp/order/insert',
+              'https://apps.onetwotrading.co.th' + '/erp/order/insert',
               payload
             )
 
