@@ -37,8 +37,8 @@ export const useOrderStore = defineStore('order', {
           import.meta.env.VITE_API_BASE_URL + '/online/api/order/all',
           {
             page: pageName,
-            tab: tabName,
-            date: date
+            tab: tabName
+            //date: date
           },
           {
             headers: {
