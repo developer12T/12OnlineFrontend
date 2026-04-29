@@ -46,6 +46,10 @@ export default {
     {
       path: 'manual',
       component: () => import('../views/zort/manualOnline.vue')
+    },
+    {
+      path: 'admin',
+      component: () => import('../views/zort/adminPanel.vue')
     }
   ]
 }

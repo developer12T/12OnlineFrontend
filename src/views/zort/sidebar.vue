@@ -141,9 +141,22 @@
                 </div>
               </router-link>
             </div>
-
-          
           </li>
+
+          <!-- Admin Button - Only for saharat.pua -->
+          <li v-if="userInfo.email === 'saharat.pua@onetwotrading.co.th'">
+            <div class="flex items-center p-3 text-white rounded-lg hover:bg-sky-600 cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105">
+              <router-link to="/onlineManage/admin">
+                <div class="flex flex-col items-center">
+                  <svg class="w-5 h-5 text-gray-300 group-hover:text-white" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.72-7 8.77V12H5V6.3l7-3.11v8.8z" />
+                  </svg>
+                  <span class="text-[10px] mt-1">แก้ไขที่อยู่จัดส่ง</span>
+                </div>
+              </router-link>
+            </div>
+          </li>
+          
         </ul>
       </div>
     </nav>
