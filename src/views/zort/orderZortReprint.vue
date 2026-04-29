@@ -116,7 +116,8 @@
         <!-- Table -->
         <div v-else class="w-full">
           <TableOrder :data="filteredItems" :columns="tableColumns" :selected="selected"
-            @selected-update="onSelectedUpdate" :isLoading="isLoading">
+            @selected-update="onSelectedUpdate" :isLoading="isLoading" :currentSort="sortConfig"
+            @sort-column="handleSort">
             <template v-slot:orderdate="{ row }">
               {{ formatDateTime(row.orderdate) }}
             </template>
@@ -166,6 +167,7 @@ export default {
     const isLoading = ref(false);
 
     const orders = ref([]);
+    const sortConfig = ref({ column: 'invno', direction: 'asc' });
 
     // Date range
     const startDate = ref("");
@@ -373,6 +375,27 @@ export default {
         });
       }
 
+      // sorting
+      filtered.sort((a, b) => {
+        const aVal = a[sortConfig.value.column];
+        const bVal = b[sortConfig.value.column];
+
+        // Handle null/undefined values
+        if (aVal == null && bVal == null) return 0;
+        if (aVal == null) return sortConfig.value.direction === 'asc' ? 1 : -1;
+        if (bVal == null) return sortConfig.value.direction === 'asc' ? -1 : 1;
+
+        // Compare values
+        let comparison = 0;
+        if (typeof aVal === 'number' && typeof bVal === 'number') {
+          comparison = aVal - bVal;
+        } else {
+          comparison = String(aVal).localeCompare(String(bVal), 'th');
+        }
+
+        return sortConfig.value.direction === 'asc' ? comparison : -comparison;
+      });
+
       return filtered;
     });
 
@@ -397,6 +420,17 @@ export default {
     const handleSearch = (searchText) => {
       textInput.value = searchText;
       // ✅ ไม่ต้อง loadData() แล้ว (เดี๋ยวเปลืองและทำให้กระตุก)
+    };
+
+    const handleSort = (columnId) => {
+      if (sortConfig.value.column === columnId) {
+        // Toggle direction if same column
+        sortConfig.value.direction = sortConfig.value.direction === 'asc' ? 'desc' : 'asc';
+      } else {
+        // Set new column with ascending direction
+        sortConfig.value.column = columnId;
+        sortConfig.value.direction = 'asc';
+      }
     };
 
     const onSelectedUpdate = (newValue) => {
@@ -584,12 +618,14 @@ export default {
       clearDateFilter,
       searchDate,
       handleSearch,
+      handleSort,
       onSelectedUpdate,
       printCopy,
       printAll,
       printSummary,
       formatDateTime,
-      exportExcel
+      exportExcel,
+      sortConfig,
     };
   },
 };

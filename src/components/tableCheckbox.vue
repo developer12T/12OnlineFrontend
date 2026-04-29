@@ -6,8 +6,15 @@
           <input type="checkbox" :checked="selectAll" @change="setSelectAll($event.target.checked)"
             class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
         </th>
-        <th v-for="col in columns" :key="col.id" scope="col" class="px-6 py-3 text-center">
-          {{ col.title }}
+        <th v-for="col in columns" :key="col.id" scope="col" 
+          class="px-6 py-3 text-center cursor-pointer hover:bg-gray-100 transition-colors select-none"
+          @click="$emit('sort-column', col.id)">
+          <div class="flex items-center justify-center gap-2">
+            {{ col.title }}
+            <span class="text-xs" v-if="currentSort.column === col.id">
+              {{ currentSort.direction === 'asc' ? '↑' : '↓' }}
+            </span>
+          </div>
         </th>
       </tr>
     </thead>
@@ -138,6 +145,10 @@ export default {
       type: String,
       default: 'ไม่พบรายการข้อมูลที่ต้องการ',
     },
+    currentSort: {
+      type: Object,
+      default: () => ({ column: 'invno', direction: 'asc' }),
+    },
   },
   setup(props, { emit }) {
     // checkbox start
@@ -170,8 +181,7 @@ export default {
       setSelectAll,
     }
   },
-};
-</script>
+};</script>
 
 <style scoped>
 /* Car Animation */
