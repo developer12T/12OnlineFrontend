@@ -4,40 +4,32 @@
     isCollapsed ? 'ml-20' : 'ml-64',
   ]">
     <div class="p-4">
-      <div class="flex flex-col-reverse sm:flex-row justify-end items-center mb-4">
-        <div class="mr-auto flex items-center space-x-3 ml-2">
+      <div class="flex flex-col-reverse sm:flex-row justify-between items-center mb-4 gap-4">
+        <!-- Date Range Inputs (Left) -->
+        <div class="flex items-center gap-2">
           <!-- Date Range Inputs -->
-          <div class="flex items-center space-x-2 bg-white rounded-lg p-2 shadow-md">
-            <div class="flex items-center space-x-2">
-              <label class="text-sm font-medium text-gray-700">วันที่เริ่มต้น:</label>
-              <input v-model="startDate" type="text" placeholder="YYYY-MM-DD"
-                class="px-3 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm" />
-            </div>
-            <div class="flex items-center space-x-2">
-              <label class="text-sm font-medium text-gray-700">วันที่สิ้นสุด:</label>
-              <input v-model="endDate" type="text" placeholder="YYYY-MM-DD"
-                class="px-3 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm" />
-            </div>
+          <div class="flex items-center gap-1 bg-white rounded-lg p-2 shadow-md">
+            <label class="text-xs font-medium text-gray-700 whitespace-nowrap">วันที่:</label>
+            <input v-model="startDate" type="text" placeholder="YYYY-MM-DD"
+              class="px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-xs w-28" />
+            <label class="text-xs font-medium text-gray-700">-</label>
+            <input v-model="endDate" type="text" placeholder="YYYY-MM-DD"
+              class="px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-xs w-28" />
 
             <button @click="searchDate"
-              class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-1 rounded text-sm font-medium transition-colors">
+              class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-xs font-medium transition-colors">
               ค้นหา
             </button>
 
             <button @click="clearDateFilter"
-              class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-1 rounded text-sm font-medium transition-colors">
+              class="bg-gray-500 hover:bg-gray-600 text-white px-3 py-1 rounded text-xs font-medium transition-colors">
               ล้าง
             </button>
           </div>
         </div>
 
-        <!-- Search Bar -->
-        <div class="flex items-center sm:order-1 mb-4 sm:mb-0 ml-4">
-          <SearchOrder :searchBar="textInput" @search="handleSearch" />
-        </div>
-
-        <!-- Print Buttons -->
-        <div class="flex items-center space-x-2">
+        <!-- Print Buttons (Center) -->
+        <div class="flex items-center gap-2">
           <button @click="printCopy"
             class="bg-green-500 hover:bg-green-600 text-white shadow-lg border border-green-500 hover:border-green-600 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-md text-sm px-5 py-2 text-center mb-2 sm:mb-0 dark:bg-green-600 dark:text-green-500 dark:hover:text-white dark:hover:bg-green-700 dark:focus:ring-green-800"
             :class="{ 'pointer-events-none opacity-50': !isItemSelected }">
@@ -47,12 +39,12 @@
 
           <button @click="printAll"
             class="bg-blue-500 hover:bg-blue-600 text-white shadow-lg border border-blue-500 hover:border-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-sm px-5 py-2 text-center mb-2 sm:mb-0 dark:bg-blue-600 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-            พิมพ์ทั้งหมด
+            พิมพ์
             {{ filteredItems.length > 0 ? filteredItems.length + " ใบ" : "" }}
           </button>
 
           <button @click="printSummary"
-            class="bg-[#007BFF] shadow-md flex items-center hover:bg-green-600 text-white border border-[#007BFF] hover:border-green-600 focus:ring-4 focus:outline-none focus:ring-green-300 gap-2 font-medium rounded-md text-sm px-5 py-2 text-center mb-2 sm:mb-0 dark:bg-green-600 dark:text-green-500 dark:hover:text-white dark:hover:bg-green-700 dark:focus:ring-green-800 sm:ml-4"
+            class="bg-[#007BFF] shadow-md flex items-center hover:bg-green-600 text-white border border-[#007BFF] hover:border-green-600 focus:ring-4 focus:outline-none focus:ring-green-300 gap-2 font-medium rounded-md text-sm px-5 py-2 text-center mb-2 sm:mb-0 dark:bg-green-600 dark:text-green-500 dark:hover:text-white dark:hover:bg-green-700 dark:focus:ring-green-800"
             :class="{ 'pointer-events-none opacity-50': !isItemSelected }">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
               <path fill="currentColor"
@@ -61,6 +53,26 @@
             ใบรวม
             {{ selected.length > 0 ? selected.length + " รายการ" : "" }}
           </button>
+        </div>
+
+        <!-- Search Bar & INVNO (Right) -->
+        <div class="flex items-center gap-2">
+          <SearchOrder :searchBar="textInput" @search="handleSearch" />
+
+          <!-- INVNO Range Inputs -->
+          <div class="flex items-center gap-1 rounded-lg p-2 bg-white  shadow-md">
+            <label class="text-xs font-medium text-gray-700 whitespace-nowrap">INVNO:</label>
+            <input v-model="invnoMin" type="text" placeholder="Min"
+              class="px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-xs w-40" />
+            <label class="text-xs font-medium text-gray-700">-</label>
+            <input v-model="invnoMax" type="text" placeholder="Max"
+              class="px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-xs w-40" />
+
+            <button @click="clearInvnoFilter"
+              class="bg-gray-500 hover:bg-gray-600 text-white px-3 py-1 rounded text-xs font-medium transition-colors">
+              ล้าง
+            </button>
+          </div>
         </div>
       </div>
 
@@ -172,6 +184,10 @@ export default {
     // Date range
     const startDate = ref("");
     const endDate = ref("");
+
+    // INVNO range
+    const invnoMin = ref("");
+    const invnoMax = ref("");
 
     // Search
     const textInput = ref("");
@@ -360,6 +376,22 @@ export default {
         });
       }
 
+      // INVNO between filter
+      if (invnoMin.value || invnoMax.value) {
+        filtered = filtered.filter((item) => {
+          const invno = String(item.invno || "").trim();
+          if (!invno) return false;
+
+          const min = invnoMin.value.trim();
+          const max = invnoMax.value.trim();
+
+          if (min && max) return invno >= min && invno <= max;
+          if (min) return invno >= min;
+          if (max) return invno <= max;
+          return true;
+        });
+      }
+
       // search filter (ไม่ยิง API ซ้ำแล้ว)
       if (textInput.value) {
         const keyword = textInput.value.toLowerCase();
@@ -451,6 +483,11 @@ export default {
       localStorage.removeItem("reprintStartDate");
       localStorage.removeItem("reprintEndDate");
       loadData();
+    };
+
+    const clearInvnoFilter = () => {
+      invnoMin.value = "";
+      invnoMax.value = "";
     };
 
     /* =========================
@@ -609,6 +646,8 @@ export default {
       tableColumns,
       startDate,
       endDate,
+      invnoMin,
+      invnoMax,
       isLoading,
       textInput,
       selected,
@@ -616,6 +655,7 @@ export default {
       filteredItems,
       dateWiseCounts,
       clearDateFilter,
+      clearInvnoFilter,
       searchDate,
       handleSearch,
       handleSort,

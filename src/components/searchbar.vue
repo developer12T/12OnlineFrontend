@@ -1,10 +1,10 @@
 <template>
-  <div class="relative">
+  <div class="relative bg-white rounded-lg p-2  shadow-md">
     <div
-      class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"
+      class="absolute inset-y-0 left-0 flex items-center pl-2 pointer-events-none"
     >
       <svg
-        class="w-5 h-5 text-gray-500 dark:text-gray-400"
+        class="w-4 h-4 text-gray-500 dark:text-gray-400"
         aria-hidden="true"
         fill="currentColor"
         viewBox="0 0 20 20"
@@ -22,7 +22,7 @@
       id="table-search"
       v-model="searchInput"
       @input="handleSearch"
-      class="block p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+      class="block p-1.5 pl-8 text-xs text-gray-900 border border-gray-300 rounded text-xs w-48 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
       placeholder="ค้นหา"
     />
   </div>
