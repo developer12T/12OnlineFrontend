@@ -80,9 +80,9 @@
             <thead class="sticky top-0 bg-gray-100 border-b">
               <tr>
                 <th class="px-4 py-3 text-left text-xs font-semibold text-gray-900">หมายเลขออเดอร์</th>
-                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-900">ชื่อผู้รับ</th>
-                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-900">เบอร์โทร</th>
-                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-900">ที่อยู่</th>
+                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-900">ชื่อออกใบกำกับ</th>
+                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-900">เลขผู้เสียภาษี</th>
+                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-900">ที่อยู่ออกใบกำกับ</th>
                 <th class="px-4 py-3 text-left text-xs font-semibold text-gray-900">สถานะ</th>
                 <th class="px-4 py-3 text-center text-xs font-semibold text-gray-900">ดำเนินการ</th>
               </tr>
@@ -95,7 +95,7 @@
               >
                 <td class="px-4 py-3 text-sm text-gray-900">{{ order.orderNumber }}</td>
                 <td class="px-4 py-3 text-sm text-gray-900">{{ order.customerName }}</td>
-                <td class="px-4 py-3 text-sm text-gray-900">{{ order.phone }}</td>
+                <td class="px-4 py-3 text-sm text-gray-900">{{ order.customerIdNumber }}</td>
                 <td class="px-4 py-3 text-sm text-gray-600 truncate">{{ order.address }}</td>
                 <td class="px-4 py-3 text-sm">
                   <span :class="getStatusClass(order.status)">
@@ -151,7 +151,7 @@
           <div class="space-y-4">
             <!-- Customer Name -->
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">ชื่อผู้รับ</label>
+              <label class="block text-sm font-medium text-gray-700 mb-1">ชื่อออกใบกำกับ</label>
               <input
                 v-model="editForm.customerName"
                 type="text"
@@ -159,11 +159,11 @@
               />
             </div>
 
-            <!-- Phone -->
+            <!-- Tax ID -->
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">เบอร์โทรศัพท์</label>
+              <label class="block text-sm font-medium text-gray-700 mb-1">เลขผู้เสียภาษี</label>
               <input
-                v-model="editForm.phone"
+                v-model="editForm.customerIdNumber"
                 type="text"
                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
@@ -171,42 +171,12 @@
 
             <!-- Address -->
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">ที่อยู่</label>
+              <label class="block text-sm font-medium text-gray-700 mb-1">ที่อยู่ออกใบกำกับ</label>
               <textarea
                 v-model="editForm.address"
                 rows="3"
                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               ></textarea>
-            </div>
-
-            <!-- Province -->
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">จังหวัด</label>
-              <input
-                v-model="editForm.province"
-                type="text"
-                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-
-            <!-- District -->
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">อำเภอ</label>
-              <input
-                v-model="editForm.district"
-                type="text"
-                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-
-            <!-- Postal Code -->
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">รหัสไปรษณีย์</label>
-              <input
-                v-model="editForm.postalCode"
-                type="text"
-                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
             </div>
           </div>
 
@@ -334,11 +304,8 @@ export default {
       selectedOrder.value = order
       editForm.value = {
         customerName: order.customerName || '',
-        phone: order.phone || '',
-        address: order.address || '',
-        province: order.province || '',
-        district: order.district || '',
-        postalCode: order.postalCode || ''
+        customerIdNumber: order.customerIdNumber || '',
+        address: order.address || ''
       }
     }
 
