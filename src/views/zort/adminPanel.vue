@@ -257,6 +257,8 @@ export default {
         error.value = ''
         successMessage.value = ''
         
+        const token = JSON.parse(localStorage.getItem('token'))
+
         // Search from MongoDB via API
         const response = await axios.post(
           import.meta.env.VITE_API_BASE_URL + '/online/api/order/search',
@@ -265,6 +267,7 @@ export default {
           },
           {
             headers: {
+              Authorization: `Bearer ${token}`,
               'x-channel': 'uat'
             }
           }
@@ -321,6 +324,7 @@ export default {
           editForm.value,
           {
             headers: {
+              Authorization: `Bearer ${token}`,
               'x-channel': 'uat'
             }
           }

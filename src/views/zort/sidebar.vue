@@ -143,8 +143,8 @@
             </div>
           </li>
 
-          <!-- Admin Button - Only for saharat.pua -->
-          <li v-if="userInfo.email === 'saharat.pua@onetwotrading.co.th'">
+          <!-- Admin Button -->
+          <li>
             <div class="flex items-center p-3 text-white rounded-lg hover:bg-sky-600 cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105">
               <router-link to="/onlineManage/admin">
                 <div class="flex flex-col items-center">
