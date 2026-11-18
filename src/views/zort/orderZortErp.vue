@@ -17,7 +17,7 @@
           </svg>
           นำเข้าระบบ
         </button>
-        <button v-if="tabs === 'wait-tab'" :class="{ 'opacity-50 cursor-not-allowed': isLoading || isExporting }"
+        <button v-if="tabs === 'wait-tab' && showSapExport" :class="{ 'opacity-50 cursor-not-allowed': isLoading || isExporting }"
           :disabled="isLoading || isExporting" @click="exportSapExcel()" type="button"
           class="bg-[#16A34A] hover:bg-[#16A34A]/80 text-white border border-[#16A34A] shadow-md hover:border-[#16A34A]/80 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2 text-center mb-2 sm:mb-0 sm:ml-2 inline-flex items-center gap-2">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
@@ -487,6 +487,8 @@ export default {
     }
 
 
+    // ปุ่มออกไฟล์ SAP ยังไม่เปิดใช้จริง เปลี่ยนเป็น true เมื่อพร้อม
+    const showSapExport = false;
     const isExporting = ref(false);
     const exportSapExcel = async () => {
       if (!filteredItems.value.length) {
@@ -618,6 +620,7 @@ export default {
       addOrder,
       exportSapExcel,
       isExporting,
+      showSapExport,
       printCopy,
       printOriginal,
       printOriginalAndCopy,
