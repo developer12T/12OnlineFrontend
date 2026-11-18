@@ -17,6 +17,15 @@
           </svg>
           นำเข้าระบบ
         </button>
+        <button v-if="tabs === 'wait-tab'" :class="{ 'opacity-50 cursor-not-allowed': isLoading || isExporting }"
+          :disabled="isLoading || isExporting" @click="exportSapExcel()" type="button"
+          class="bg-[#16A34A] hover:bg-[#16A34A]/80 text-white border border-[#16A34A] shadow-md hover:border-[#16A34A]/80 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2 text-center mb-2 sm:mb-0 sm:ml-2 inline-flex items-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+            <path fill="currentColor"
+              d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zm-1 7V3.5L18.5 9zm-4.6 9L10 15.3L8.4 12.6h1.5l.9 1.7l.9-1.7h1.5l-1.6 2.7l1.6 2.7h-1.5l-.9-1.7l-.9 1.7z" />
+          </svg>
+          {{ isExporting ? 'กำลังสร้างไฟล์...' : 'ออกไฟล์ SAP' }}
+        </button>
 
         <button v-if="tabs === 'success-tab'" @click="printOriginal()"
           class="bg-[#4CAF50] flex items-center hover:bg-green-600 text-white border border-green-500 hover:border-green-600 focus:ring-4 focus:outline-none focus:ring-green-300 gap-2 font-medium rounded-md text-sm px-5 py-2 text-center mb-2 sm:mb-0 dark:bg-green-600 dark:text-green-500 dark:hover:text-white dark:hover:bg-green-700 dark:focus:ring-green-800 mr-1"
@@ -301,6 +310,8 @@
 import { onMounted, computed, ref,nextTick  } from "vue";
 import { useAuthStore, useOrderStore, useDashboardStore } from "../../stores";
 import Swal from "sweetalert2";
+import axios from "axios";
+import { saveAs } from "file-saver";
 import SearchBar from "../../components/searchbar.vue";
 import Table from "../../components/table.vue";
 import TableOrder from "../../components/tableCheckbox.vue";
@@ -476,6 +487,31 @@ export default {
     }
 
 
+    const isExporting = ref(false);
+    const exportSapExcel = async () => {
+      if (!filteredItems.value.length) {
+        Swal.fire({ icon: 'warning', title: 'ไม่มีข้อมูล', text: 'ไม่มีรายการรอนำเข้าสำหรับออกไฟล์' });
+        return;
+      }
+      try {
+        isExporting.value = true;
+        const res = await axios.post(
+          import.meta.env.VITE_API_BASE_URL + "/online/api/order/export-sap",
+          { orders: filteredItems.value },
+          { responseType: "blob" }
+        );
+        const now = new Date();
+        const pad = (n) => String(n).padStart(2, "0");
+        const stamp = `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}_${pad(now.getHours())}${pad(now.getMinutes())}`;
+        saveAs(res.data, `SAP_Sales_Order_${stamp}.xlsx`);
+      } catch (error) {
+        console.error(error);
+        Swal.fire({ icon: 'error', title: 'เกิดข้อผิดพลาด!', text: 'ไม่สามารถออกไฟล์ SAP ได้' });
+      } finally {
+        isExporting.value = false;
+      }
+    };
+
     const selected = ref([]);
     const isItemSelected = ref(false);
     const onSelectedUpdate = (newValue) => {
@@ -580,6 +616,8 @@ export default {
     return {
       tableColumns,
       addOrder,
+      exportSapExcel,
+      isExporting,
       printCopy,
       printOriginal,
       printOriginalAndCopy,
