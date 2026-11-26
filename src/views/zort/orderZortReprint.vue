@@ -167,6 +167,7 @@ import { useOrderStore } from "../../stores";
 import Swal from "sweetalert2";
 import SearchOrder from "../../components/searchbar.vue";
 import TableOrder from "../../components/tableCheckbox.vue";
+import { saveSummaryData } from "../../utils/summaryStorage";
 
 export default {
   components: { SearchOrder, TableOrder },
@@ -569,7 +570,10 @@ export default {
       }
 
       const selectedOrders = orders.value.filter((o) => selected.value.includes(o.id));
-      localStorage.setItem("summaryData", JSON.stringify(selectedOrders));
+      if (!saveSummaryData(selectedOrders)) {
+        Swal.fire({ icon: "error", title: "เปิดใบรวมไม่ได้", text: "ข้อมูลมากเกินไป ลองเลือกรายการให้น้อยลง" });
+        return;
+      }
       window.open(import.meta.env.BASE_URL + "onlineManage/order/summary", "_blank");
 
     };

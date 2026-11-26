@@ -412,6 +412,7 @@ import SearchOrder from "../../components/searchbar.vue";
 import TableOrder from "../../components/tableCheckbox.vue";
 import axios from "axios";
 import { saveAs } from "file-saver";
+import { saveSummaryData } from "../../utils/summaryStorage";
 
 export default {
   components: { CountOrder, SearchOrder, TableOrder },
@@ -526,14 +527,6 @@ export default {
     const onSelectedUpdate = (val) => {
       selected.value = val;
       isItemSelected.value = val.length > 0;
-
-      if (!val.length) {
-        localStorage.removeItem("summaryData");
-        return;
-      }
-
-      const data = orders.value.filter(o => val.includes(o.id));
-      localStorage.setItem("summaryData", JSON.stringify(data));
     };
 
     /* ===============================
@@ -575,7 +568,10 @@ export default {
     const printSummary = () => {
 
       const data = orders.value.filter(o => selected.value.includes(o.id));
-      localStorage.setItem("summaryData", JSON.stringify(data));
+      if (!saveSummaryData(data)) {
+        Swal.fire({ icon: "error", title: "เปิดใบรวมไม่ได้", text: "ข้อมูลมากเกินไป ลองเลือกรายการให้น้อยลง" });
+        return;
+      }
       window.open(import.meta.env.BASE_URL + "onlineManage/order/summary", "_blank");
 
     };
